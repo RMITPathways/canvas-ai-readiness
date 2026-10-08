@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATE Framework Matching Task</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #333;
+        margin: 0;
+        padding: 10px;
+    }
+    .task-container {
+        width: 100%;
+        border: 1px solid #e3e5e0;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #f9f9f9;
+    }
+    .header {
+        background-color: #000054;
+        color: white;
+        padding: 15px 20px;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+    .instructions {
+        padding: 20px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e3e5e0;
+        font-size: 1.05em;
+        line-height: 1.5;
+    }
+    .cards-container {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .card {
+        background-color: #ffffff;
+        border: 2px solid #dddddd;
+        border-radius: 6px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+    .card.correct {
+        border-color: #2e7d32;
+        background-color: #e8f5e9;
+    }
+    .card.incorrect {
+        border-color: #c62828;
+        background-color: #ffebee;
+    }
+    .prompt-text {
+        font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        font-size: 0.95em;
+        color: #000054;
+        line-height: 1.5;
+        background-color: #f0f4ff;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    .match-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+    }
+    select {
+        padding: 8px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        flex-grow: 1;
+        max-width: 300px;
+        cursor: pointer;
+    }
+    select:focus {
+        outline: none;
+        border-color: #000054;
+    }
+    .footer {
+        padding: 20px;
+        text-align: center;
+        border-top: 1px solid #e3e5e0;
+        background-color: #ffffff;
+    }
+    .submit-btn {
+        background-color: #e61e29;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.1em;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #b71821;
+    }
+    #feedback-message {
+        margin-top: 15px;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    .try-again { color: #c62828; }
+    .success { color: #2e7d32; }
+    
+    #justifications {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e8f5e9;
+        border: 2px solid #2e7d32;
+        border-radius: 6px;
+        text-align: left;
+    }
+    .justifications-title {
+        color: #2e7d32;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    .just-list {
+        margin: 0;
+        padding-left: 20px;
+        line-height: 1.6;
+    }
+    .just-list li { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="task-container">
+    <div class="header">Prompt Analysis Task</div>
+    <div class="instructions">
+        Read the snippets from the role-play prompt below. Use the dropdown menus to match each snippet to its correct label from the <strong>CREATE</strong> framework.
+    </div>
+
+    <div class="cards-container" id="quiz-form">
+        
+        <!-- Snippet 1: Adjustments -->
+        <div class="card" id="card-1">
+            <div class="prompt-text">"Provide only one short response, counterargument, or question at a time, and wait for my reply before continuing. Do not correct my grammar... Ensure all your vocabulary remains strictly at or below a CEFR B2 reading level."</div>
+            <div class="match-controls">
+                <label for="q1">Matches to:</label>
+                <select id="q1" data-answer="Adjustments">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Snippet 2: Request -->
+        <div class="card" id="card-2">
+            <div class="prompt-text">"I am an entrepreneur pitching a new social enterprise to you. Have a role-play debate with me where you challenge my business plan."</div>
+            <div class="match-controls">
+                <label for="q2">Matches to:</label>
+                <select id="q2" data-answer="Request">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Snippet 3: Extras -->
+        <div class="card" id="card-3">
+            <div class="prompt-text">"Aim for a 3 to 5 turn conversation... Once the role-play has naturally concluded, drop your character persona and act as my English language coach. Give me a brief appraisal of my performance..."</div>
+            <div class="match-controls">
+                <label for="q3">Matches to:</label>
+                <select id="q3" data-answer="Extras">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Snippet 4: Character -->
+        <div class="card" id="card-4">
+            <div class="prompt-text">"Act as a strict business investor. You believe that a business's only goal is to make money and that social enterprises are a bad idea."</div>
+            <div class="match-controls">
+                <label for="q4">Matches to:</label>
+                <select id="q4" data-answer="Character">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Snippet 5: Type of Output -->
+        <div class="card" id="card-5">
+            <div class="prompt-text">"A short, one-on-one text conversation. You must start the conversation. For your first turn, introduce your character briefly, establish your position on the topic, and invite me to speak."</div>
+            <div class="match-controls">
+                <label for="q5">Matches to:</label>
+                <select id="q5" data-answer="Type of Output">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Snippet 6: Examples -->
+        <div class="card" id="card-6">
+            <div class="prompt-text">"If I say I want to reinvest my profits into the local community, you should argue that this ruins profit margins and that the money should go to the investors."</div>
+            <div class="match-controls">
+                <label for="q6">Matches to:</label>
+                <select id="q6" data-answer="Examples">
+                    <option value="">-- Select an option --</option>
+                    <option value="Character">Character</option>
+                    <option value="Request">Request</option>
+                    <option value="Examples">Examples</option>
+                    <option value="Adjustments">Adjustments</option>
+                    <option value="Type of Output">Type of Output</option>
+                    <option value="Extras">Extras</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button class="submit-btn" onclick="checkAnswers()">Check Answers</button>
+        <div id="feedback-message"></div>
+        
+        <div id="justifications">
+            <h4 class="justifications-title">✅ Excellent work! Here is a summary of the CREATE framework:</h4>
+            <ul class="just-list">
+                <li><strong>Character:</strong> Tell the AI what you want it to do. For a role-play, this is where you tell it what specific person it needs to be.</li>
+                <li><strong>Request:</strong> Say what you want the AI to do. For a role-play, you must also say what your role is.</li>
+                <li><strong>Examples:</strong> Give one or more examples of what could happen in the chat. This gives important context that the AI will use to build its character.</li>
+                <li><strong>Adjustments:</strong> Describe what constraints there are or the rules the AI must follow (e.g., using language we can understand, but not acting like a teacher).</li>
+                <li><strong>Types of output:</strong> Describe how the AI should generate its response (e.g., producing short turns and inviting you to respond).</li>
+                <li><strong>Extras:</strong> Add any other instructions here to make sure that the AI always does what you want it to, without making mistakes or going off topic.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        let correctCount = 0;
+        const totalQuestions = 6;
+
+        for (let i = 1; i <= totalQuestions; i++) {
+            const selectElement = document.getElementById('q' + i);
+            const cardElement = document.getElementById('card-' + i);
+            const selectedValue = selectElement.value;
+            const correctValue = selectElement.getAttribute('data-answer');
+
+            // Reset classes
+            cardElement.classList.remove('correct', 'incorrect');
+
+            if (selectedValue === correctValue) {
+                cardElement.classList.add('correct');
+                correctCount++;
+            } else if (selectedValue !== "") {
+                cardElement.classList.add('incorrect');
+            } else {
+                cardElement.classList.add('incorrect'); // Highlight missed questions as well
+            }
+        }
+
+        const feedbackObj = document.getElementById('feedback-message');
+        const justificationsObj = document.getElementById('justifications');
+
+        if (correctCount === totalQuestions) {
+            feedbackObj.innerHTML = "<span class='success'>All matches are correct! Review the framework breakdown below.</span>";
+            justificationsObj.style.display = "block";
+            
+            // Lock all selects so they can't be changed after success
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById('q' + i).disabled = true;
+            }
+        } else {
+            feedbackObj.innerHTML = "<span class='try-again'>Some matches are incorrect or missing. Try again!</span>";
+            justificationsObj.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
