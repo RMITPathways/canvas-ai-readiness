@@ -7,34 +7,17 @@
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: #ffffff;
+        background-color: transparent;
         color: #333;
         margin: 0;
-        padding: 10px;
+        padding: 0;
     }
     .task-container {
         width: 100%;
-        border: 1px solid #e3e5e0;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #f9f9f9;
-    }
-    .header {
-        background-color: #000054;
-        color: white;
-        padding: 15px 20px;
-        font-size: 1.2em;
-        font-weight: bold;
-    }
-    .instructions {
-        padding: 20px;
-        background-color: #ffffff;
-        border-bottom: 1px solid #e3e5e0;
-        font-size: 1.05em;
-        line-height: 1.5;
+        background-color: transparent;
     }
     .cards-container {
-        padding: 20px;
+        padding: 0;
         display: flex;
         flex-direction: column;
         gap: 15px;
@@ -86,10 +69,9 @@
         border-color: #000054;
     }
     .footer {
-        padding: 20px;
-        text-align: center;
-        border-top: 1px solid #e3e5e0;
-        background-color: #ffffff;
+        padding: 20px 0 5px 0;
+        text-align: left;
+        background-color: transparent;
     }
     .submit-btn {
         background-color: #e61e29;
@@ -139,11 +121,6 @@
 <body>
 
 <div class="task-container">
-    <div class="header">Prompt Analysis Task</div>
-    <div class="instructions">
-        Read the snippets from the role-play prompt below. Use the dropdown menus to match each snippet to its correct label from the <strong>CREATE</strong> framework.
-    </div>
-
     <div class="cards-container" id="quiz-form">
         
         <!-- Snippet 1: Adjustments -->
@@ -279,16 +256,13 @@
             const selectedValue = selectElement.value;
             const correctValue = selectElement.getAttribute('data-answer');
 
-            // Reset classes
             cardElement.classList.remove('correct', 'incorrect');
 
             if (selectedValue === correctValue) {
                 cardElement.classList.add('correct');
                 correctCount++;
-            } else if (selectedValue !== "") {
-                cardElement.classList.add('incorrect');
             } else {
-                cardElement.classList.add('incorrect'); // Highlight missed questions as well
+                cardElement.classList.add('incorrect');
             }
         }
 
@@ -299,7 +273,6 @@
             feedbackObj.innerHTML = "<span class='success'>All matches are correct! Review the framework breakdown below.</span>";
             justificationsObj.style.display = "block";
             
-            // Lock all selects so they can't be changed after success
             for (let i = 1; i <= totalQuestions; i++) {
                 document.getElementById('q' + i).disabled = true;
             }
@@ -307,27 +280,22 @@
             feedbackObj.innerHTML = "<span class='try-again'>Some matches are incorrect or missing. Try again!</span>";
             justificationsObj.style.display = "none";
         }
-    }
-</script>
-<script>
-    function sendResizeMessage() {
-        // Measure the exact height of the widget content
-        const height = document.body.scrollHeight + 20; 
         
-        // Send the official LTI resize command to Canvas
+        // Trigger resize immediately after DOM update
+        sendResizeMessage();
+    }
+
+    function sendResizeMessage() {
+        const height = document.body.scrollHeight + 10; 
         window.parent.postMessage(JSON.stringify({
             subject: 'lti.frameResize',
             height: height
         }), '*');
     }
 
-    // 1. Resize as soon as the page loads
     window.addEventListener('load', sendResizeMessage);
-
-    // 2. Resize automatically if the window changes size or the accordion opens
     window.addEventListener('resize', sendResizeMessage);
 
-    // 3. Watch the body for any changes (like the Justifications box appearing or textboxes expanding)
     const observer = new MutationObserver(sendResizeMessage);
     observer.observe(document.body, { 
         attributes: true, 
