@@ -216,5 +216,31 @@
         });
     }
 </script>
+<script>
+    function sendResizeMessage() {
+        // Measure the exact height of the widget content
+        const height = document.body.scrollHeight + 20; 
+        
+        // Send the official LTI resize command to Canvas
+        window.parent.postMessage(JSON.stringify({
+            subject: 'lti.frameResize',
+            height: height
+        }), '*');
+    }
+
+    // 1. Resize as soon as the page loads
+    window.addEventListener('load', sendResizeMessage);
+
+    // 2. Resize automatically if the window changes size or the accordion opens
+    window.addEventListener('resize', sendResizeMessage);
+
+    // 3. Watch the body for any changes (like the Justifications box appearing or textboxes expanding)
+    const observer = new MutationObserver(sendResizeMessage);
+    observer.observe(document.body, { 
+        attributes: true, 
+        childList: true, 
+        subtree: true 
+    });
+</script>
 </body>
 </html>
