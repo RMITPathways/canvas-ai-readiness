@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 1: Presentation Planner Prompt</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 10px;
+        color: #000000;
+    }
+    .widget-box {
+        border: 1px solid #E3E5E0;
+        background-color: #FFFFFF;
+        padding: 20px;
+    }
+    .prompt-preview {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 12px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        margin-bottom: 15px;
+        color: #000000;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        color: #000054;
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-box">
+    <label>Prompt Template:</label>
+    <div id="prompt-template" class="prompt-preview">**Character:** 
+Act as a supportive English tutor helping me plan my presentation.
+
+**Request:** 
+Help me brainstorm and organize ideas for my presentation: "Review a piece of art" (I have uploaded an image of the artwork). Guide me through these 4 planning sections:
+1. Title, type of art, artist, and background information
+2. Where and when I saw it, and how I felt
+3. What the art shows (2–3 key details like focus, colours, lighting, or shapes)
+4. What the art means to me and the mood it creates
+
+**Examples (Target Language):** 
+- Visual signposting: "As you can see...", "If you look at the...", "In the background..."
+- Passive voice: "It was created by...", "It is called...", "My interest was captured by..."
+
+**Adjustments:** 
+- Do NOT write a script for me, and do NOT provide the ideas or describe the topic yourself. I must give all the information.
+- Ask me about the 4 planning sections ONE at a time.
+- After I answer, do not move to the next section immediately. First, reply to my idea using one of the Target Language phrases to show me how it works, then ask ONE follow-up question to get more detail from me.
+- Keep your English at a CEFR B2 level.
+
+**Type of Output:** 
+A one-on-one, back-and-forth conversation.
+
+**Extras:** 
+After we finish discussing all 4 sections, organize MY ideas into a 4-row table matching the 4 planning sections. Use ONLY short bullet points (maximum 6 words per bullet) so I can speak naturally from notes instead of reading a script.</div>
+
+    <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+    <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+</div>
+
+<script>
+    function copyPrompt() {
+        const promptText = document.getElementById('prompt-template').innerText.trim();
+
+        navigator.clipboard.writeText(promptText).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 2500);
+        }).catch(err => {
+            alert('Failed to copy. Please try again.');
+        });
+    }
+</script>
+
+</body>
+</html>
