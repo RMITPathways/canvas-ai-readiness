@@ -9,7 +9,7 @@
         font-family: 'Helvetica Neue', Arial, sans-serif;
         background-color: transparent;
         margin: 0;
-        padding: 10px;
+        padding: 4px;
         color: #000000;
     }
     .widget-box {
@@ -95,17 +95,24 @@ After we finish discussing all 4 sections, organize MY ideas into a 4-row table 
 <script>
     function copyPrompt() {
         const promptText = document.getElementById('prompt-template').innerText.trim();
-
         navigator.clipboard.writeText(promptText).then(() => {
             const status = document.getElementById('copy-status');
             status.style.display = 'inline';
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 2500);
-        }).catch(err => {
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }).catch(() => {
             alert('Failed to copy. Please try again.');
         });
     }
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
+    }
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
 </script>
 
 </body>
