@@ -9,34 +9,66 @@
         font-family: 'Helvetica Neue', Arial, sans-serif;
         background-color: transparent;
         margin: 0;
-        padding: 4px;
+        padding: 0;
         color: #000000;
     }
     .widget-box {
-        border: 1px solid #E3E5E0;
-        background-color: #FFFFFF;
-        padding: 20px;
+        border: none;
+        background-color: transparent;
+        padding: 0;
     }
-    .prompt-preview {
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .input-cell {
+        display: flex;
+        flex-direction: column;
+    }
+    .prompt-cell {
         background-color: #F9F9F9;
         border-left: 4px solid #000054;
-        padding: 12px 15px;
+        padding: 10px 15px;
         font-family: monospace;
         font-size: 13px;
         line-height: 1.5;
         white-space: pre-wrap;
-        margin-bottom: 15px;
         color: #000000;
     }
-    label {
-        display: block;
-        font-weight: bold;
+    .tip-cell {
+        background-color: #F9F9F9;
+        border: 1px solid #E3E5E0;
+        border-left: 4px solid #000054;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
         color: #000054;
-        font-size: 14px;
-        margin-bottom: 6px;
     }
     textarea {
         width: 100%;
+        flex: 1;
         padding: 10px;
         border: 1px solid #000054;
         border-radius: 0;
@@ -44,7 +76,14 @@
         font-size: 13px;
         box-sizing: border-box;
         resize: vertical;
-        margin-bottom: 15px;
+        margin: 0;
+    }
+    .section-divider {
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+    .footer-bar {
+        margin-top: 15px;
     }
     .btn-copy {
         padding: 10px 20px;
@@ -67,47 +106,108 @@
         font-size: 14px;
         display: none;
     }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
 </style>
 </head>
 <body>
 
 <div class="widget-box">
-    <label for="student-notes">1. Paste your presentation notes from Step 1 here:</label>
-    <textarea id="student-notes" rows="4" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+    <!-- Top Section: Notes Input + Matching Tip -->
+    <div class="header-grid">
+        <label for="student-notes" class="col-title" style="cursor: pointer;">1. Paste your presentation notes from Step 1 here:</label>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
 
-    <label>2. Prompt Template (Your notes will be added automatically):</label>
-    <div id="prompt-template" class="prompt-preview">**Character:** 
-Act as a supportive English tutor helping me practice my presentation.
+    <div class="aligned-row">
+        <div class="input-cell">
+            <textarea id="student-notes" rows="4" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+        </div>
+        <div class="tip-cell">
+            <strong>Your Notes:</strong> In order for the AI to give useful feedback, it must know what you intend to speak about. That way, it is able to see how closely your spoken presentation matches your notes.
+        </div>
+    </div>
 
-**Request:** 
-Help me practice my presentation: "Review a piece of art" (I have attached the artwork image and pasted my presentation notes at the bottom of this prompt). In my next message, I will use the Record Voice button to deliver my presentation. Listen to my presentation and give me feedback on how well I follow my notes and use the Target Language.
+    <!-- Subheader for Prompt Template -->
+    <div class="section-divider">
+        <div class="col-title">2. Prompt Template (Your notes will be added automatically):</div>
+    </div>
 
-**Examples (Target Language):** 
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Character:** 
+Act as a supportive English tutor helping me practice my presentation.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> This time, we tell our tutor that we want support to rehearse the presentation.
+        </div>
+    </div>
+
+    <!-- ROW 2: Request -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Request:** 
+Help me practice my presentation: "Review a piece of art" (I have attached the artwork image and pasted my presentation notes at the bottom of this prompt). In my next message, I will use the Record Voice button to deliver my presentation. Listen to my presentation and give me feedback on how well I follow my notes and use the Target Language.</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> This tells the AI that we will do the process in two steps. First, we send the prompt (with our notes) and attach our image. In the second step, we record our presentation. This keeps the process clean and manageable. We also make the connection between our shared notes and the recorded presentation clear.
+        </div>
+    </div>
+
+    <!-- ROW 3: Examples -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Examples (Target Language):** 
 - Visual signposting: "As you can see...", "If you look at the...", "In the background..."
-- Passive voice: "It was created by...", "It is called...", "My interest was captured by..."
+- Passive voice: "It was created by...", "It is called...", "My interest was captured by..."</div>
+        <div class="tip-cell">
+            <strong>Examples:</strong> We specifically want the AI to listen out for target language examples like these.
+        </div>
+    </div>
 
-**Adjustments:** 
+    <!-- ROW 4: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Adjustments:** 
 - Do NOT write a script for me, and do NOT give me feedback yet.
 - For your FIRST reply, simply confirm you have read my presentation notes and tell me to press the Record Voice button when I am ready to begin.
 - After I submit my spoken presentation, evaluate my text. Respect my natural speaking style—focus only on language errors that make my meaning unclear, and do not invent feedback about my accent or pronunciation.
-- Keep your English at a CEFR B2 level.
+- Keep your English at a CEFR B2 level.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> It is important to set some rules here to make sure the AI does exactly what you want it to do (read the notes and give feedback only after listening to the presentation) and what NOT to do (write a script, or give feedback before you speak). We also tell it to focus on clear meaning rather than judging our accent or pronunciation.
+        </div>
+    </div>
 
-**Type of Output:** 
+    <!-- ROW 5: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Type of Output:** 
 After I submit my recording, give me feedback in a 3-row table:
 1. Content & Notes Match (Did I cover all sections of my notes and describe the topic clearly?)
 2. Target Language (Which phrases from the Examples list did I use well, and where could I add one more?)
-3. Clarity Check (Show 1–2 sentences where my grammar or vocabulary was confusing, with a simple clue on how to fix them).
+3. Clarity Check (Show 1–2 sentences where my grammar or vocabulary was confusing, with a simple clue on how to fix them).</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> The feedback should be formatted in a way that makes it easy to read, so we ask the AI to generate a table with sections to highlight the content, target language, and overall clarity.
+        </div>
+    </div>
 
-**Extras:** 
+    <!-- ROW 6: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Extras:** 
 After the table, give me one quick multiple-choice or fill-in-the-blank question to practice fixing a mistake from my presentation. Do not give me the answer until I try it.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> This is an optional, useful extra that helps you engage with the feedback a bit more deeply by practising one mistake right away.
+        </div>
+    </div>
 
-    <button class="btn-copy" onclick="copyMergedPrompt()">Copy Full Prompt</button>
-    <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyMergedPrompt()">Copy Full Prompt</button>
+        <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    </div>
 </div>
 
 <script>
     function copyMergedPrompt() {
-        const promptText = document.getElementById('prompt-template').innerText.trim();
         const notesText = document.getElementById('student-notes').value.trim();
 
         if (!notesText) {
@@ -115,6 +215,8 @@ After the table, give me one quick multiple-choice or fill-in-the-blank question
             return;
         }
 
+        const parts = Array.from(document.querySelectorAll('.prompt-part')).map(el => el.innerText.trim());
+        const promptText = parts.join('\n\n');
         const mergedOutput = `${promptText}\n\n**My Presentation Notes:**\n${notesText}`;
 
         navigator.clipboard.writeText(mergedOutput).then(() => {
