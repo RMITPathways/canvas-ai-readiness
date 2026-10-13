@@ -17,23 +17,53 @@
         background-color: #FFFFFF;
         padding: 20px;
     }
-    .prompt-preview {
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .prompt-cell {
         background-color: #F9F9F9;
         border-left: 4px solid #000054;
-        padding: 12px 15px;
+        padding: 10px 15px;
         font-family: monospace;
         font-size: 13px;
         line-height: 1.5;
         white-space: pre-wrap;
-        margin-bottom: 15px;
         color: #000000;
     }
-    label {
-        display: block;
-        font-weight: bold;
+    .tip-cell {
+        background-color: #F9F9F9;
+        border: 1px solid #E3E5E0;
+        border-left: 4px solid #000054;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
         color: #000054;
-        font-size: 14px;
-        margin-bottom: 6px;
+    }
+    .footer-bar {
+        margin-top: 15px;
     }
     .btn-copy {
         padding: 10px 20px;
@@ -56,46 +86,99 @@
         font-size: 14px;
         display: none;
     }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
 </style>
 </head>
 <body>
 
 <div class="widget-box">
-    <label>Prompt Template:</label>
-    <div id="prompt-template" class="prompt-preview">**Character:** 
-Act as a supportive English tutor helping me plan my presentation.
+    <!-- Column Headers -->
+    <div class="header-grid">
+        <div class="col-title">Prompt Template:</div>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
 
-**Request:** 
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Character:** 
+Act as a supportive English tutor helping me plan my presentation.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> First, tell the AI what role you want it to play (a tutor) and what the task is (helping with planning).
+        </div>
+    </div>
+
+    <!-- ROW 2: Request -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Request:** 
 Help me brainstorm and organize ideas for my presentation: "Review a piece of art" (I have uploaded an image of the artwork). Guide me through these 4 planning sections:
 1. Title, type of art, artist, and background information
 2. Where and when I saw it, and how I felt
 3. What the art shows (2–3 key details like focus, colours, lighting, or shapes)
-4. What the art means to me and the mood it creates
+4. What the art means to me and the mood it creates</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> Next, give details about the task (including any uploaded image). Use specific verbs, e.g., <em>brainstorm, organise, guide</em>, and outline the main stages of the presentation that need planning.
+        </div>
+    </div>
 
-**Examples (Target Language):** 
+    <!-- ROW 3: Examples -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Examples (Target Language):** 
 - Visual signposting: "As you can see...", "If you look at the...", "In the background..."
-- Passive voice: "It was created by...", "It is called...", "My interest was captured by..."
+- Passive voice: "It was created by...", "It is called...", "My interest was captured by..."</div>
+        <div class="tip-cell">
+            <strong>Examples:</strong> Give some examples of the relevant language you have learned this week that you can use in your presentation.
+        </div>
+    </div>
 
-**Adjustments:** 
+    <!-- ROW 4: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Adjustments:** 
 - Do NOT write a script for me, and do NOT provide the ideas or describe the topic yourself. I must give all the information.
 - Ask me about the 4 planning sections ONE at a time.
 - After I answer, do not move to the next section immediately. First, reply to my idea using one of the Target Language phrases to show me how it works, then ask ONE follow-up question to get more detail from me.
-- Keep your English at a CEFR B2 level.
+- Keep your English at a CEFR B2 level.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> It is very important to mention here that the AI must not write a script for you, and that you must generate all of the ideas. This ensures the AI acts in a supporting role. Another useful adjustment is to tell the AI to work through the plan step by step and ask follow-up questions. Finally, it is important to state your English level (for this example, we use CEFR level B2).
+        </div>
+    </div>
 
-**Type of Output:** 
-A one-on-one, back-and-forth conversation.
+    <!-- ROW 5: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Type of Output:** 
+A one-on-one, back-and-forth conversation.</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> Specify a back-and-forth conversation so the AI chats with you step by step rather than giving one long answer all at once.
+        </div>
+    </div>
 
-**Extras:** 
+    <!-- ROW 6: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Extras:** 
 After we finish discussing all 4 sections, organize MY ideas into a 4-row table matching the 4 planning sections. Use ONLY short bullet points (maximum 6 words per bullet) so I can speak naturally from notes instead of reading a script.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> In this section, tell the AI to summarise the conversation by putting your notes into a table using short bullet points only. This makes it easy to review your notes and helps you speak naturally rather than reading a script.
+        </div>
+    </div>
 
-    <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
-    <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+        <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    </div>
 </div>
 
 <script>
     function copyPrompt() {
-        const promptText = document.getElementById('prompt-template').innerText.trim();
-        navigator.clipboard.writeText(promptText).then(() => {
+        const parts = Array.from(document.querySelectorAll('.prompt-part')).map(el => el.innerText.trim());
+        const fullPrompt = parts.join('\n\n');
+
+        navigator.clipboard.writeText(fullPrompt).then(() => {
             const status = document.getElementById('copy-status');
             status.style.display = 'inline';
             setTimeout(() => { status.style.display = 'none'; }, 2500);
