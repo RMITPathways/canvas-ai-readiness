@@ -9,7 +9,7 @@
         font-family: 'Helvetica Neue', Arial, sans-serif;
         background-color: transparent;
         margin: 0;
-        padding: 10px;
+        padding: 4px;
         color: #000000;
     }
     .widget-box {
@@ -73,7 +73,7 @@
 
 <div class="widget-box">
     <label for="student-notes">1. Paste your presentation notes from Step 1 here:</label>
-    <textarea id="student-notes" rows="5" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+    <textarea id="student-notes" rows="4" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
 
     <label>2. Prompt Template (Your notes will be added automatically):</label>
     <div id="prompt-template" class="prompt-preview">**Character:** 
@@ -117,13 +117,21 @@ Make sure at least one question connects my presentation to the Unit Themes in t
         navigator.clipboard.writeText(mergedOutput).then(() => {
             const status = document.getElementById('copy-status');
             status.style.display = 'inline';
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 2500);
-        }).catch(err => {
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }).catch(() => {
             alert('Failed to copy. Please try again.');
         });
     }
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
+    }
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
 </script>
 
 </body>
