@@ -9,34 +9,66 @@
         font-family: 'Helvetica Neue', Arial, sans-serif;
         background-color: transparent;
         margin: 0;
-        padding: 4px;
+        padding: 0;
         color: #000000;
     }
     .widget-box {
-        border: 1px solid #E3E5E0;
-        background-color: #FFFFFF;
-        padding: 20px;
+        border: none;
+        background-color: transparent;
+        padding: 0;
     }
-    .prompt-preview {
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .input-cell {
+        display: flex;
+        flex-direction: column;
+    }
+    .prompt-cell {
         background-color: #F9F9F9;
         border-left: 4px solid #000054;
-        padding: 12px 15px;
+        padding: 10px 15px;
         font-family: monospace;
         font-size: 13px;
         line-height: 1.5;
         white-space: pre-wrap;
-        margin-bottom: 15px;
         color: #000000;
     }
-    label {
-        display: block;
-        font-weight: bold;
+    .tip-cell {
+        background-color: #F9F9F9;
+        border: 1px solid #E3E5E0;
+        border-left: 4px solid #000054;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
         color: #000054;
-        font-size: 14px;
-        margin-bottom: 6px;
     }
     textarea {
         width: 100%;
+        flex: 1;
         padding: 10px;
         border: 1px solid #000054;
         border-radius: 0;
@@ -44,7 +76,14 @@
         font-size: 13px;
         box-sizing: border-box;
         resize: vertical;
-        margin-bottom: 15px;
+        margin: 0;
+    }
+    .section-divider {
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+    .footer-bar {
+        margin-top: 15px;
     }
     .btn-copy {
         padding: 10px 20px;
@@ -67,44 +106,105 @@
         font-size: 14px;
         display: none;
     }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
 </style>
 </head>
 <body>
 
 <div class="widget-box">
-    <label for="student-notes">1. Paste your presentation notes from Step 1 here:</label>
-    <textarea id="student-notes" rows="4" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+    <!-- Top Section: Notes Input + Matching Tip -->
+    <div class="header-grid">
+        <label for="student-notes" class="col-title" style="cursor: pointer;">1. Paste your presentation notes from Step 1 here:</label>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
 
-    <label>2. Prompt Template (Your notes will be added automatically):</label>
-    <div id="prompt-template" class="prompt-preview">**Character:** 
-Act as a curious classmate listening to my presentation.
+    <div class="aligned-row">
+        <div class="input-cell">
+            <textarea id="student-notes" rows="4" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+        </div>
+        <div class="tip-cell">
+            <strong>Your Notes:</strong> In order for the AI to ask relevant questions, it must know what you spoke about. This allows it to base its questions directly on your presentation notes.
+        </div>
+    </div>
 
-**Request:** 
-Ask me follow-up questions about my presentation: "Review a piece of art" (I have attached the artwork image and pasted my presentation notes at the bottom of this prompt). Help me practice explaining my ideas and connecting my topic to our unit themes.
+    <!-- Subheader for Prompt Template -->
+    <div class="section-divider">
+        <div class="col-title">2. Prompt Template (Your notes will be added automatically):</div>
+    </div>
 
-**Examples (Unit Themes & Target Language):** 
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Character:** 
+Act as a curious classmate listening to my presentation.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> This time, we tell the AI to act like a curious classmate rather than a formal tutor to simulate a real audience.
+        </div>
+    </div>
+
+    <!-- ROW 2: Request -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Request:** 
+Ask me follow-up questions about my presentation: "Review a piece of art" (I have attached the artwork image and pasted my presentation notes at the bottom of this prompt). Help me practice explaining my ideas and connecting my topic to our unit themes.</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> This tells the AI to ask follow-up questions about our presentation, pushing us to explain our ideas more deeply.
+        </div>
+    </div>
+
+    <!-- ROW 3: Examples -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Examples (Unit Themes & Target Language):** 
 - Unit 5 themes: authenticity, contemporary art, cultural heritage, masterpieces, reproductions vs. originals, or experiencing art through technology (AR/VR) versus in person.
-- Target grammar: Passive voice ("It was created by...", "It is considered...").
+- Target grammar: Passive voice ("It was created by...", "It is considered...").</div>
+        <div class="tip-cell">
+            <strong>Examples:</strong> We provide the key ideas and themes from the unit so the AI can generate suitable, relevant questions.
+        </div>
+    </div>
 
-**Adjustments:** 
+    <!-- ROW 4: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Adjustments:** 
 - Ask only ONE short question at a time, and wait for my reply before continuing.
 - If my answer is very brief, ask a quick follow-up question to push me for more detail.
 - Do not correct my grammar during the Q&A; focus only on my ideas.
-- Keep your English at a CEFR B2 level.
+- Keep your English at a CEFR B2 level.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> Here, we tell the AI how to act. Asking questions one by one reflects a real Q&A session. We also tell it to ask for more detail if our answers are too short, which pushes us to improve.
+        </div>
+    </div>
 
-**Type of Output:** 
-A 3-to-4 turn Q&A conversation. Start immediately by complimenting one detail from my presentation notes (or image) and asking your first question.
+    <!-- ROW 5: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Type of Output:** 
+A 3-to-4 turn Q&A conversation. Start immediately by complimenting one detail from my presentation notes (or image) and asking your first question.</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> We state a suitable number of questions to simulate a realistic Q&A session, and tell the AI exactly how to start the conversation.
+        </div>
+    </div>
 
-**Extras:** 
+    <!-- ROW 6: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Extras:** 
 Make sure at least one question connects my presentation to the Unit Themes in the Examples list. After 3 to 4 questions (or if I type "End Q&A"), stop acting as a classmate and become my English tutor: highlight one strong answer I gave, and suggest one Target Language item from the Examples list I could use to improve my response.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> We ensure the AI connects its questions to the unit themes. Once the Q&A is complete, we tell the AI to change roles and turn back into a tutor to give us feedback and help us improve.
+        </div>
+    </div>
 
-    <button class="btn-copy" onclick="copyMergedPrompt()">Copy Full Prompt</button>
-    <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyMergedPrompt()">Copy Full Prompt</button>
+        <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    </div>
 </div>
 
 <script>
     function copyMergedPrompt() {
-        const promptText = document.getElementById('prompt-template').innerText.trim();
         const notesText = document.getElementById('student-notes').value.trim();
 
         if (!notesText) {
@@ -112,6 +212,8 @@ Make sure at least one question connects my presentation to the Unit Themes in t
             return;
         }
 
+        const parts = Array.from(document.querySelectorAll('.prompt-part')).map(el => el.innerText.trim());
+        const promptText = parts.join('\n\n');
         const mergedOutput = `${promptText}\n\n**My Presentation Notes:**\n${notesText}`;
 
         navigator.clipboard.writeText(mergedOutput).then(() => {
