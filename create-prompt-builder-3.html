@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation Prompt Merger</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 10px;
+        color: #000000;
+    }
+    .widget-box {
+        border: 1px solid #E3E5E0;
+        background-color: #FFFFFF;
+        padding: 20px;
+    }
+    .prompt-preview {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 12px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        margin-bottom: 15px;
+        color: #000000;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        color: #000054;
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #000054;
+        border-radius: 0;
+        font-family: inherit;
+        font-size: 13px;
+        box-sizing: border-box;
+        resize: vertical;
+        margin-bottom: 15px;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-box">
+    <label for="student-notes">1. Paste your presentation notes from Step 1 here:</label>
+    <textarea id="student-notes" rows="5" placeholder="Paste your bullet-point notes or summary table here..."></textarea>
+
+    <label>2. Prompt Template (Your notes will be added automatically):</label>
+    <div id="prompt-template" class="prompt-preview">**Character:** 
+Act as a supportive English tutor helping me practice my Unit 5 presentation ("Review a piece of art").
+
+**Request:** 
+I have pasted my presentation notes at the bottom of this prompt (and attached the image of my artwork). In my next message, I will use the Record Voice button to deliver my presentation. Listen to my presentation and give me feedback on my structure, visual description, and language.
+
+**Examples (Target Language to Check):** 
+- Visual signposting: "As you can see...", "If you look at the...", "In the background...", "You'll notice..."
+- Passive voice for background: "It was created by...", "It is called...", "My interest was captured by..."
+
+**Adjustments:** 
+- Do NOT write a presentation script for me, and do NOT give me feedback yet.
+- For your FIRST reply, simply confirm that you have received my notes and tell me to press the Record Voice button whenever I am ready to begin my presentation.
+- Wait for me to submit my spoken presentation before giving any feedback.
+- When evaluating my presentation, respect my natural speaking style—focus only on language errors that make my meaning unclear, and do not invent feedback about my accent or pronunciation.
+- Keep your language at a CEFR B2 level.
+
+**Type of Output:** 
+After I submit my spoken presentation, provide your feedback in a simple 3-row table:
+1. Structure & Visual Match (Did I cover all 4 sections of my notes and clearly describe the artwork?)
+2. Unit 5 Language (Which visual signposting phrases and passive voice structures did I use well, and where could I add one more?)
+3. Clarity Check (Highlight 1–2 specific sentences where grammar or word choice made my meaning confusing, with a short clue on how to fix them).
+
+**Extras:** 
+End your feedback with one encouraging comment and ask if I would like to try recording a specific section again to improve my score.</div>
+
+    <button class="btn-copy" onclick="copyMergedPrompt()">Copy Full Prompt</button>
+    <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+</div>
+
+<script>
+    function copyMergedPrompt() {
+        const promptText = document.getElementById('prompt-template').innerText.trim();
+        const notesText = document.getElementById('student-notes').value.trim();
+
+        if (!notesText) {
+            alert('Please paste your presentation notes into the box first.');
+            return;
+        }
+
+        const mergedOutput = `${promptText}\n\n**My Presentation Notes:**\n${notesText}`;
+
+        navigator.clipboard.writeText(mergedOutput).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 2500);
+        }).catch(err => {
+            alert('Failed to copy. Please try again.');
+        });
+    }
+</script>
+
+</body>
+</html>
