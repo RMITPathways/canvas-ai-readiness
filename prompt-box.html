@@ -3,89 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Coach Prompt Merger</title>
 <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 0; background: transparent; }
-    .prompt-container { position: relative; background: #f9f9f9; border: 1px solid #e3e5e0; border-radius: 6px; padding: 45px 20px 20px 20px; }
-    .prompt-text { font-family: "Courier New", Courier, monospace; font-size: 13px; line-height: 1.5; white-space: pre-wrap; margin: 0; color: #333; }
-    .copy-btn { position: absolute; top: 10px; right: 10px; background: #000054; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: background 0.2s; }
-    .copy-btn:hover { background: #000080; }
-    .copy-btn.success { background: #27ae60; }
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        color: #000000;
+    }
+    .widget-box {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .prompt-cell {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 10px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        color: #000000;
+    }
+    .tip-cell {
+        background-color: #e6f2ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
+        color: #000054;
+    }
+    .footer-bar {
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+        transition: background-color 0.2s;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
 </style>
 </head>
 <body>
 
-<div class="prompt-container">
-    <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy Prompt</button>
-    <pre class="prompt-text" id="promptContent">
-**Character:** 
-Act as my personal language coach and transcription assistant.
+<div class="widget-box">
+    <!-- Column Headers -->
+    <div class="header-grid">
+        <div class="col-title">Prompt Template:</div>
+        <div class="col-title">How was this prompt made?</div>
+    </div>
 
-**Request:** 
-Process my uploaded language production (which will be an image of handwriting, an audio file, or a typed document). If the upload is an image or audio file, transcribe it exactly as I produced it. Then, analyze the text to help me improve.
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Character:** 
+Act as my personal language coach and transcription assistant.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> Tell the AI to act as a language tutor.
+        </div>
+    </div>
 
-**Examples (Conditional Transcription):** 
-* For image uploads: Extract ONLY my handwriting. Ignore printed worksheet text and crossed-out words. Format cleanly on natural lines, and determine the correct reading sequence by matching logical flow across multiple pages. 
-* For audio uploads (.mp3): Transcribe my spoken text verbatim, keeping all grammatical, vocabulary, or structural errors exactly as I spoke them so I can analyze my authentic interlanguage.
-* For typed text/Word documents: Skip the transcription step entirely and proceed directly to analysis.
+    <!-- ROW 2: Request -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Request:** 
+Process my uploaded language production (which will be an image of handwriting, an audio file, or a typed document). If the upload is an image or audio file, transcribe it exactly as I produced it. Then, analyze the text to help me improve.</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> Ask the AI to transcribe the text (if needed) and give feedback so that we can improve.
+        </div>
+    </div>
 
-**Adjustments:** 
-* During transcription: Do NOT fix spelling, grammar, or punctuation. 
-* During feedback: Do NOT rewrite or fix the entire text for me. Respect my linguistic identity - do not "clean up" localized vocabulary or non-standard phrasing if the meaning is clear and intelligible. 
-* Focus ONLY on the top 3 recurring errors that cause major misunderstandings or impede communication.
+    <!-- ROW 3: Examples -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Examples (Conditional Transcription):** 
+- For image uploads: Extract ONLY my handwriting. Ignore printed worksheet text and crossed-out words. Format cleanly on natural lines, and determine the correct reading sequence by matching logical flow across multiple pages. 
 
-**Type of Output:** 
-* Transcription: If an image or audio file was uploaded, print the transcription first under the heading "### Your Original Text". 
-* Feedback: Output a simple 4-column table containing: 
+- For audio uploads (.mp3): Transcribe my spoken text verbatim, keeping all grammatical, vocabulary, or structural errors exactly as I spoke them so I can analyze my authentic interlanguage.
+
+- For typed text/Word documents: Skip the transcription step entirely and proceed directly to analysis.</div>
+        <div class="tip-cell">
+            <strong>Example:</strong> Give specific examples to help it do a better job of transcribing text depending on the file type.
+        </div>
+    </div>
+
+    <!-- ROW 4: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Adjustments:** 
+- During transcription: Do NOT fix spelling, grammar, or punctuation. 
+
+- During feedback: Do NOT rewrite or fix the entire text for me. Respect my linguistic identity - do not "clean up" localized vocabulary or non-standard phrasing if the meaning is clear and intelligible. 
+
+- Focus ONLY on the top 3 recurring errors that cause major misunderstandings or impede communication.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> Tell it how to give more useful feedback and avoid fixing mistakes, which ensures it acts as a coach rather than an editor.
+        </div>
+    </div>
+
+    <!-- ROW 5: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Type of Output:** 
+- Transcription: If an image or audio file was uploaded, print the transcription first under the heading "### Your Original Text". 
+
+- Feedback: Output a simple 4-column table containing: 
+
   1. Error Type (keep the grammatical name simple)
   2. My Original Sentence/Utterance
   3. Why it is incorrect (explain without using heavy linguistic jargon)
-  4. A short clue or rule to fix it myself (e.g., "Think: [simple rule]")
+  4. A short clue or rule to fix it myself (e.g., "Think: [simple rule]")</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> Tell it to use a table to keep the feedback neat and easy to read.
+        </div>
+    </div>
 
-**Extras:** 
-* Practice: After the table, provide one quick practice question for each of the 3 identified errors. These MUST be formatted as multiple-choice or simple fill-in-the-blank questions. Do NOT provide the answers until I attempt them.
-* Extension Invitation: Conclude your response with a short closing offer for next steps (e.g., "Once you reply with your answers, let me know if you would like more practice questions or want to review any grammar rule in more detail.").
-</pre>
+    <!-- ROW 6: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Extras:** 
+- Practice: After the table, provide one quick practice question for each of the 3 identified errors. These MUST be formatted as multiple-choice or simple fill-in-the-blank questions. Do NOT provide the answers until I attempt them.
+
+- Extension Invitation: Conclude your response with a short closing offer for next steps (e.g., "Once you reply with your answers, let me know if you would like more practice questions or want to review any grammar rule in more detail.").</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> Ask for some extra support in the form of practice questions.<br><br>
+            <strong>💡 Formatting tip:</strong> Asterisks (**) and dashes (-) are used to help the AI parse instructions and separate different ideas clearly.
+        </div>
+    </div>
+
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+        <span id="copy-status" class="status-msg">Copied! ✔</span>
+    </div>
 </div>
 
 <script>
     function copyPrompt() {
-        const text = document.getElementById('promptContent').innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            const btn = document.getElementById('copyBtn');
-            btn.innerText = 'Copied! ✔';
-            btn.classList.add('success');
-            setTimeout(() => {
-                btn.innerText = 'Copy Prompt';
-                btn.classList.remove('success');
-            }, 3000);
+        const parts = Array.from(document.querySelectorAll('.prompt-part')).map(el => el.innerText.trim());
+        const fullPrompt = parts.join('\n\n');
+
+        navigator.clipboard.writeText(fullPrompt).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }).catch(() => {
+            alert('Failed to copy. Please try again.');
         });
     }
-</script>
-<script>
-    function sendResizeMessage() {
-        // Measure the exact height of the widget content
-        const height = document.body.scrollHeight + 20; 
-        
-        // Send the official LTI resize command to Canvas
-        window.parent.postMessage(JSON.stringify({
-            subject: 'lti.frameResize',
-            height: height
-        }), '*');
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
     }
-
-    // 1. Resize as soon as the page loads
-    window.addEventListener('load', sendResizeMessage);
-
-    // 2. Resize automatically if the window changes size or the accordion opens
-    window.addEventListener('resize', sendResizeMessage);
-
-    // 3. Watch the body for any changes (like the Justifications box appearing or textboxes expanding)
-    const observer = new MutationObserver(sendResizeMessage);
-    observer.observe(document.body, { 
-        attributes: true, 
-        childList: true, 
-        subtree: true 
-    });
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
 </script>
+
 </body>
 </html>
