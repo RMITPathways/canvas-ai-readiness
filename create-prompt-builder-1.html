@@ -109,72 +109,71 @@
     <!-- ROW 1: Character -->
     <div class="aligned-row">
         <div class="prompt-cell prompt-part">**Character:** 
-Act as my personal language coach and transcription assistant.</div>
+Act as my personal language coach and transcription assistant.
+</div>
         <div class="tip-cell">
-            <strong>Character:</strong> Tell the AI to act as a language tutor.
+            <strong>Character:</strong> First, tell the AI what we want it to do. We want it to act as a language tutor and also help transcribe text.
         </div>
     </div>
 
     <!-- ROW 2: Request -->
     <div class="aligned-row">
         <div class="prompt-cell prompt-part">**Request:** 
-Process my uploaded language production (which will be an image of handwriting, an audio file, or a typed document). If the upload is an image or audio file, transcribe it exactly as I produced it. Then, analyze the text to help me improve.</div>
+Process my uploaded language production (image, audio, or typed text). Transcribe it exactly as I produced it if necessary, then analyze the text to help me improve.</div>
         <div class="tip-cell">
-            <strong>Request:</strong> Ask the AI to transcribe the text (if needed) and give feedback so that we can improve.
+            <strong>Request:</strong> We first need to ask the AI to transcribe the text (if it is hand-written or an audio file). After it has done this, we want it to give us some feedback so we can improve our language skills.
         </div>
     </div>
 
     <!-- ROW 3: Examples -->
     <div class="aligned-row">
-        <div class="prompt-cell prompt-part">**Examples (Conditional Transcription):** 
-- For image uploads: Extract ONLY my handwriting. Ignore printed worksheet text and crossed-out words. Format cleanly on natural lines, and determine the correct reading sequence by matching logical flow across multiple pages. 
-
-- For audio uploads (.mp3): Transcribe my spoken text verbatim, keeping all grammatical, vocabulary, or structural errors exactly as I spoke them so I can analyze my authentic interlanguage.
-
-- For typed text/Word documents: Skip the transcription step entirely and proceed directly to analysis.</div>
+        <div class="prompt-cell prompt-part">**Examples:** 
+- Image: Extract ONLY my handwriting. Ignore printed worksheet text and crossed-out words. Format on natural lines and match logical flow across pages.
+            
+- Audio: Transcribe verbatim, keeping all original errors so I can analyze my authentic interlanguage.
+            
+- Typed: Skip transcription and proceed directly to analysis.</div>
         <div class="tip-cell">
-            <strong>Example:</strong> Give specific examples to help it do a better job of transcribing text depending on the file type.
+            <strong>Example:</strong> Now we can give more detail about how we want the AI to do its job. For instance, we want it to ignore any writing that is crossed out or not part of the writing, and  transcribe it exactly as it was written or spoken.
         </div>
     </div>
 
     <!-- ROW 4: Adjustments -->
     <div class="aligned-row">
         <div class="prompt-cell prompt-part">**Adjustments:** 
-- During transcription: Do NOT fix spelling, grammar, or punctuation. 
-
-- During feedback: Do NOT rewrite or fix the entire text for me. Respect my linguistic identity - do not "clean up" localized vocabulary or non-standard phrasing if the meaning is clear and intelligible. 
-
+- Do NOT fix spelling, grammar, or punctuation during transcription.
+            
+- Do NOT rewrite or fix the entire text for me. 
+            
 - Focus ONLY on the top 3 recurring errors that cause major misunderstandings or impede communication.</div>
         <div class="tip-cell">
-            <strong>Adjustments:</strong> Tell it how to give more useful feedback and avoid fixing mistakes, which ensures it acts as a coach rather than an editor.
+            <strong>Adjustments:</strong> In this section, we make sure the AI does exactly what we want it to. We can ask it to not fix our mistakes, and when giving feedback only focus on three errors that have the biggest impact on understanding.
         </div>
     </div>
 
     <!-- ROW 5: Type of Output -->
     <div class="aligned-row">
         <div class="prompt-cell prompt-part">**Type of Output:** 
-- Transcription: If an image or audio file was uploaded, print the transcription first under the heading "### Your Original Text". 
-
-- Feedback: Output a simple 4-column table containing: 
-
-  1. Error Type (keep the grammatical name simple)
-  2. My Original Sentence/Utterance
-  3. Why it is incorrect (explain without using heavy linguistic jargon)
-  4. A short clue or rule to fix it myself (e.g., "Think: [simple rule]")</div>
+1. Transcription (if applicable): Print under the heading "### Your Original Text".
+2. Feedback Table: Output a simple 4-column table containing:
+   - Error Type (simple grammatical name)
+   - My Original Sentence/Utterance
+   - Why it is incorrect (no heavy linguistic jargon)
+   - A short clue or rule to fix it myself (e.g., "Think: [simple rule]")</div>
         <div class="tip-cell">
-            <strong>Type of Output:</strong> Tell it to use a table to keep the feedback neat and easy to read.
+            <strong>Type of Output:</strong> Type of Output: Here, we specify how we want the final response to look. If it transcribed our text, we want it to share a copy so we can check for accuracy (and not have to re-listen). We can also ask it to build a simple table to display the feedback more clearly.
         </div>
     </div>
 
     <!-- ROW 6: Extras -->
     <div class="aligned-row">
         <div class="prompt-cell prompt-part">**Extras:** 
-- Practice: After the table, provide one quick practice question for each of the 3 identified errors. These MUST be formatted as multiple-choice or simple fill-in-the-blank questions. Do NOT provide the answers until I attempt them.
-
-- Extension Invitation: Conclude your response with a short closing offer for next steps (e.g., "Once you reply with your answers, let me know if you would like more practice questions or want to review any grammar rule in more detail.").</div>
+- Practice: Provide one multiple-choice or fill-in-the-blank practice question for each of the 3 errors. Do NOT provide answers until I attempt them.
+            
+- Extension: End with a short invitation for next steps (e.g., "Reply with your answers, and let me know if you want more practice or a deeper grammar review!").</div>
         <div class="tip-cell">
-            <strong>Extras:</strong> Ask for some extra support in the form of practice questions.<br><br>
-            <strong>💡 Formatting tip:</strong> Asterisks (**) and dashes (-) are used to help the AI parse instructions and separate different ideas clearly.
+            <strong>Extras:</strong> It can also be useful to practice our mistakes immediately after seeing them, so in the extras section, we can ask the AI to create some quick practice questions.<br><br>
+            <strong>Formatting tip:</strong> Asterisks (**) are used to help the AI parse instructions and separate different ideas clearly.
         </div>
     </div>
 
