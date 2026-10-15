@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Socratic Brainstorming Prompt</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        color: #000000;
+    }
+    .widget-box {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .prompt-cell {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 10px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        color: #000000;
+    }
+    .tip-cell {
+        background-color: #e6f2ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
+        color: #000054;
+    }
+    .idea-input {
+        width: 85%;
+        padding: 6px 8px;
+        margin-bottom: 4px;
+        border: 1px solid #000054;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+    .footer-bar {
+        margin-top: 15px;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+        transition: background-color 0.2s;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .idea-input { width: 95%; }
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-box">
+    <!-- Column Headers -->
+    <div class="header-grid">
+        <div class="col-title">Prompt Template:</div>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
+
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-character">**Character:** 
+Act as a classmate in our group discussion about designing a healthy school. You have different opinions than me.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> Sets the AI against you. If you don't do this, the AI will just sycophantically agree that your ideas are perfect, which doesn't prepare you for a real debate.
+        </div>
+    </div>
+
+    <!-- ROW 2: Request (Interactive) -->
+    <div class="aligned-row">
+        <div class="prompt-cell">**Request:** 
+Help me practice defending my ideas. Here are the 3 design elements I want to include: 
+1. <input type="text" id="idea1" class="idea-input" placeholder="Enter your 1st idea here">
+2. <input type="text" id="idea2" class="idea-input" placeholder="Enter your 2nd idea here">
+3. <input type="text" id="idea3" class="idea-input" placeholder="Enter your 3rd idea here">
+Challenge my choices one by one.</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> Gives the AI the exact boundaries of the task.
+        </div>
+    </div>
+
+    <!-- ROW 3: Examples -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-examples">**Examples (Ways to challenge me):** 
+- Cost: "How much will that cost?" 
+- Space: "Is there enough room in a school?" 
+- Disadvantages: "What are the negative effects?"</div>
+        <div class="tip-cell">
+            <strong>Examples:</strong> Gives the AI the specific arguments (cost, space, disadvantages) it should use to attack your ideas.
+        </div>
+    </div>
+
+    <!-- ROW 4: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-adjustments">**Adjustments:** 
+- Do NOT write my arguments for me. 
+- Ask a question about ONE idea at a time. 
+- Wait for my answer before you reply or move to the next idea. 
+- Keep your English at a B2 level.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> The most important part. "Wait for my answer" stops the AI from writing a monologue and forcing you to just read it.
+        </div>
+    </div>
+
+    <!-- ROW 5: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-output">**Type of Output:** 
+A short, back-and-forth conversation. Start the conversation by challenging my FIRST idea. Do not mention the others yet.</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> Tells the AI to generate text in a conversational style.
+        </div>
+    </div>
+
+    <!-- ROW 6: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-extras">**Extras:** 
+After we discuss all 3 ideas, stop the role-play. Act as a teacher and give me short feedback on my arguments.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> Ensures that once the hard work is done, you get a reward: targeted, B2-level feedback on your persuasive English.
+        </div>
+    </div>
+
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyDynamicPrompt()">Copy Full Prompt</button>
+        <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    </div>
+</div>
+
+<script>
+    function copyDynamicPrompt() {
+        // Fetch static parts
+        const charText = document.getElementById('part-character').innerText.trim();
+        const exText = document.getElementById('part-examples').innerText.trim();
+        const adjText = document.getElementById('part-adjustments').innerText.trim();
+        const outText = document.getElementById('part-output').innerText.trim();
+        const extText = document.getElementById('part-extras').innerText.trim();
+
+        // Fetch user inputs for the Request part
+        const idea1 = document.getElementById('idea1').value.trim() || "[1st idea placeholder]";
+        const idea2 = document.getElementById('idea2').value.trim() || "[2nd idea placeholder]";
+        const idea3 = document.getElementById('idea3').value.trim() || "[3rd idea placeholder]";
+
+        // Construct Request text dynamically
+        const reqText = `**Request:** \nHelp me practice defending my ideas. Here are the 3 design elements I want to include: \n1. ${idea1}\n2. ${idea2}\n3. ${idea3}\nChallenge my choices one by one.`;
+
+        // Assemble full prompt
+        const fullPrompt = [charText, reqText, exText, adjText, outText, extText].join('\n\n');
+
+        navigator.clipboard.writeText(fullPrompt).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }).catch(() => {
+            alert('Failed to copy. Please try again.');
+        });
+    }
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
+    }
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
+</script>
+
+</body>
+</html>
