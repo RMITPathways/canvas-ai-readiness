@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 2: Unit Synthesis Prompt</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        color: #000000;
+    }
+    .widget-box {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .prompt-cell {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 10px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        color: #000000;
+    }
+    .tip-cell {
+        background-color: #e6f2ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
+        color: #000054;
+    }
+    .unit-select {
+        padding: 6px 10px;
+        margin: 6px 0 4px 0;
+        border: 1px solid #000054;
+        background-color: #FFFFFF;
+        color: #000054;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-weight: bold;
+        font-size: 13px;
+        cursor: pointer;
+    }
+    .auto-attach-note {
+        display: block;
+        margin-top: 6px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 12px;
+        color: #000054;
+        font-style: italic;
+    }
+    .footer-bar {
+        margin-top: 15px;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+        transition: background-color 0.2s;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-box">
+    <!-- Column Headers -->
+    <div class="header-grid">
+        <div class="col-title">Prompt Template:</div>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
+
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-character">**Character:** 
+Act as a supportive university English-language tutor.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> Sets the AI's role as an academic language tutor so it explains ideas clearly for university study.
+        </div>
+    </div>
+
+    <!-- ROW 2: Request (Interactive Unit Dropdown) -->
+    <div class="aligned-row">
+        <div class="prompt-cell">**Request:** 
+Summarise the readings below into a clear, cohesive mid-term review.
+
+Select your group's unit:
+<select id="unit-selector" class="unit-select">
+    <option value="">-- Choose a Unit --</option>
+    <option value="unit1">Unit 1: Money isn't Everything</option>
+    <option value="unit2">Unit 2: Burning the Midnight Oil</option>
+    <option value="unit3">Unit 3: Working Together</option>
+    <option value="unit4">Unit 4: New Frontiers in Engineering</option>
+</select><span class="auto-attach-note">(All readings and the 20-word vocabulary list for your selected unit will be added automatically when you click Copy.)</span></div>
+        <div class="tip-cell">
+            <strong>Request:</strong> Tells the AI to synthesise the readings rather than just listing facts. Selecting your unit automatically pastes the full texts directly into your prompt so the AI reads every word without cutting anything off.
+        </div>
+    </div>
+
+    <!-- ROW 3: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-adjustments">**Adjustments:** 
+- Base your review strictly on the texts provided below - do not add outside facts or assumptions.
+- Use clear English (CEFR B2 level) and easy-to-follow sentences.
+- Keep the total summary around 300 words (roughly 10% of the original texts).</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> Stops the AI from bringing in outside information, keeps the language at a suitable level, and sets a realistic 300-word target for the summary.
+        </div>
+    </div>
+
+    <!-- ROW 4: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-output">**Type of Output:** 
+Organise the review into four clear paragraphs:
+- Paragraphs 1-3: A concise summary of each reading in order (one paragraph per reading), highlighting its main argument and key examples.
+- Paragraph 4: A concluding synthesis paragraph identifying the unit's main theme and explaining how the readings connect or contrast.</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> Gives the AI a clear 4-paragraph structure: one paragraph per reading so you can revise each text individually, followed by a final paragraph that ties all the ideas together.
+        </div>
+    </div>
+
+    <!-- ROW 5: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell" id="part-extras">**Extras:** 
+Naturally use 4 to 5 words from the 20-word unit vocabulary list below, and **bold** them in your summary.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> Shows you how some target academic words can be used in context.
+        </div>
+    </div>
+
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyUnitPrompt()">Copy Full Prompt</button>
+        <span id="copy-status" class="status-msg">Copied prompt + unit texts to clipboard!</span>
+    </div>
+</div>
+
+<script>
+    // =========================================================================
+    // PASTE YOUR UNIT READINGS & 20-WORD LISTS INSIDE THE BACKTICKS (`) BELOW
+    // =========================================================================
+    const UNIT_TEXTS = {
+        unit1: `Unit 1 Reading Texts
+
+Reading 1: A BUSINESS CLOSE TO HER HEART
+Former oil company worker Zita Cobb has turned her back on the corporate world to pursue her own cultural, artistic, and environmental goals. 
+On tiny Fogo Island, off the rocky coast of Newfoundland, Canada, Zita Cobb surveys the art studios she has built. Located on the eastern edge of Canada, Fogo Island is home to fewer than 3,000 people. On the 45-minute ferry ride to the island, you might see a whale surfacing or an iceberg floating by. After arriving, you'll see brightly colored houses, enjoy the scenery from the cliffs, and search for crabs in rock pools. You can finish the day staring at star-filled skies free of light pollution from bright buildings. After a career working in the oil industry, Zita has returned to her beautiful home on Fogo Island to build a business close to her heart. 
+Zita is one of a growing number of people who have left the corporate world in order to pursue their own business dreams. Motivated by a creative urge or by a desire to help society or the environment, Zita says the modern entrepreneur "serves the needs of culture and the environment and not just business."Zita calls this "a kind of social entrepreneurship, having the very best tools from the traditional, for-profit business world but serving the right ends." 
+Zita's mission was personal: to ensure the preservation of Fogo Island's culture and to bring economic prosperity back to the island, the place where her ancestors had lived for eight generations. Life on Fogo has always been hard. For many generations, the island lacked roads and electricity. Islanders have traditionally made their living fishing, primarily for cod. When cod stocks became depleted in the 1990s as a result of industrial overfishing, the government issued a moratorium on cod fishing. Many families turned either to government assistance or to lucrative jobs elsewhere in Canada; Zita refers to such people as "economic refugees." She says, "As this happens, a little bit of us dies."She regrets that many young Newfoundlanders have been to Disneyland but have never seen a fishing boat. 
+As an islander, Zita wanted to revitalize the island's economy and encourage the development of the arts and tourism. The result was the Shorefast Foundation, established in 2006 with her brothers. About the foundation, Zita says, "We exist in relationship to the whole; the whole planet, the whole of humanity, the whole of existence. Our job is to find ways to belong to the whole while upholding the specificity of people and place." 
+One of the first initiatives of the foundation was its arts program. Zita says, "Art-making is thinking, and the power of art is evident in its capacity to translate, enrich, and deepen our experience of the world." To this end, Zita established art studios and an artist-in-residence program; this program enables artists, musicians, and writers from around the world to come to Fogo for a few weeks or a few months. They create, give talks, display their work, and interact with the islanders. When they leave, they become ambassadors for the island. 
+The foundation's initiatives have grown over the years. The New Ocean Ethic runs lectures and research projects designed to explore the island's relationship with the ocean and the effects of climate change. Geology at the Edge is a community-based geology program which provides lectures and youth programs related to the island's geology. In collaboration with Newfoundland's Memorial University, Shorefast brings professors and other academics to the island to explore Fogo's culture. The Shorefast Business Assistance Fund offers loans to small businesses on the island to help generate employment. Fogo Island Fish facilitates the selling of fish caught the traditional way - with a line and a hook - to restaurants across Canada and ensures a fair price for the fishers. 
+At the heart of all of Shorefast's activities is the 29-room Fogo Island Inn, built with the help of donations and with expertise from local craftspeople. Built on the principle of respect for nature and culture, the inn offers an opportunity for visitors to interact with the local islanders and to escape their busy lives. Visitors can go hiking, take a boat trip, hear local music, and get to know locals, enjoying Fogo's traditions. Zita believes that all businesses can be community businesses. As well as providing jobs for local people, she invests 100 percent of the profits from the inn back into the community. There are no investors looking to profit from the inn; the business is for the islanders. 
+In rebuilding Fogo Island's economy and preserving its heritage, Zita sees herself as a new kind of entrepreneur. She is not alone. Around the world, people are choosing unusual careers, often with a cultural or environmental goal. In Mexico, biologist, photographer, and travel writer Katherina Audley established the Whales of Guerrero Research Project, a community-driven research, education, and training program. In Morocco, Dounia Bounahmidi develops ethical partnerships with local craftspeople to create home furnishings for her business, Folks & Tales. And in the United States, Rebecca Hui started Roots Studio, which digitizes the work of artists from geographically isolated regions; the works are then entered into an online library that can be used for stationery, clothing, and other products. Rebecca's team has worked with over 3,000 artists around the world. 
+Back on Fogo Island, Zita Cobb has made huge steps in bringing her home community back to life. While social entrepreneurship is not an easy path to choose, those who are able to follow their dreams can enjoy both career satisfaction and the knowledge that they are creating something with deep meaning. As Zita says, "Everything starts with believing." 
+
+Reading 2: SO YOU WANT TO BE A SOCIAL ENTREPRENEUR?
+Zita Cobb says that in following your business dream, "Everything starts with believing." Apart from a vision, what else do you need to make the dream a reality? From honey to handbags, these social entrepreneurs give their advice. 
+Choose something meaningful to you 
+Think about your own life. What do you believe in? As an African American child, Tony Weaver, Jr. enjoyed watching television, but he did not see himself reflected in any of his favorite superheroes. His skin was darker than theirs, and his hair was a different texture. Tony realized that there was a lack of positive black, male role models in the media. This was reinforced later during a volunteer experience with young children: One little boy could not decide what to wear to a costume party, since he did not look like any of his white television heroes. 
+At the age of 20, Tony founded Weird Enough Productions, a comic production company dedicated to creating positive images of black men and other minority groups. At the heart of Weird Enough is the UnCommons, a group of superheroes made up of members of ethnic and other minority groups. With every story the company produces, there is a lesson plan for teachers on how to use comics to discuss social issues. Weaver says, "Using media literacy, digital literacy, and student voice, we awaken the hero in every classroom." 
+Determine and share your values 
+What are your company's values? How will you communicate these? Blanche Murray, a member of New Zealand's indigenous Maori population, is bringing jobs to her community through her successful Kai Ora Honey business. Blanche's values and beliefs were passed down from her grandmother, Saana, a strong believer in the medicinal benefits of local honey, called Mānuka. Her grandmother also believed in the right of the local Maori population to control their own resources. Blanche reports, "She said, 'let's make sure our people are the ones who own and operate this particular industry up here in the Far North and employ our own. And make sure that our own are contributing positively to our society.'" 
+This message is made clear on Kai Ora Honey's website, which reads, "Our success rests in our ability to maximize the influence of our heritage and culture as well as the environmental, social, and economic initiatives that we feel support and protect the community around us." Kai Ora Honey's clients appreciate the fact that the business is family owned and makes use of skills that go back for generations. Blanche says, "They love history, they love traditions, they love the Maori culture." 
+Use popular tools to reach your market for free 
+You don't need to spend a lot of money to promote your business - just go online! Jake Danehy was in college and his sister Caroline in high school when they launched Fair Harbor Clothing. Jake and Caroline were shocked by the number of plastic bottles they saw littering the beaches near their home. Many of these bottles find their way into the ocean. They decided to turn this waste into a line of sustainable clothing. Working with factories that turn plastic into fibers and weave it into clothing, the pair produce stylish swimwear for men, women, and children. Each swimsuit is made from 11 recycled bottles. To date, the company has upcycled more than seven and a half million plastic bottles. 
+The Danehys recognize that technology has played a role in the success of their business. Jake says, "Without much experience, Caroline and I were able to start a global supply chain, while she was in high school." Using the Internet, the pair researched fabrics and factories. They decided to market to millennials, their own demographic group. They rely heavily on social media to reach their target market. Jake says, "It levels the playing field and gives us the ability to spend our marketing dollars in the most efficient way possible." Their approach is working: Sales have grown by up to 1,000 percent each year. 
+Seek money from anywhere you can think of 
+You may want to help your community, make honey, or save the oceans - but you still need money to get started. One approach for startups is funding through social media, known as crowdfunding. How does this work? You share your idea on a crowdfunding website. You then use your project page to tell as many people as you can think of about your need for money - not only family and friends, but also contacts on social media. These people visit your page, and if they like your idea, they can contribute money. Then they tell their friends, who do the same. 
+Vaishali Umrikar had worked with women's services in India and Australia. Motivated by her experiences, she established The Empowerment Bag, a company designed to provide women with literacy training, sewing skills, and fair employment. After coming up with the idea to produce a line of practical and eco-friendly backpacks and schoolbags, Vaishali turned to crowdfunding. Her vision quickly got people's attention. She raised $910 on the first day and $2,250 in the first week. She has now helped 200 women, providing not only jobs but also housing, education, and health care for women and children. 
+Keep going! 
+What do you do if you have no experience in the business you want to create? That was the case with Ben Conard, who started Five North Chocolate while still in college. As a business student, Ben learned that 2 billion people in the world live on less than $2 a day and that much of the world's cocoa is produced by people, including children, who live in extreme poverty. Ben became involved in the fair trade movement, which ensures that businesses meet strict labor standards, including fairly compensating farmers. Traveling through Ecuador and India, Ben saw firsthand the difference fair trade companies can make to local workers. 
+A chocolate enthusiast, Ben decided to focus on the production of fair trade snack foods, cooking up samples in his college dorm room kitchen. With no background in the food industry, he admitted being "super naive" at the beginning. He says, "I have vivid memories of sticking labels until I couldn't feel my fingers and messing up batches of chocolate at 4 a.m. . . . leaving me questioning myself as an entrepreneur and if I was even the right person for the job. I still struggle with that." Despite his moments of self-doubt, Ben never quit and kept learning from his experiences. Eventually, he made Five North Chocolate a successful business and was named one of the Top 10 Biggest Fair Trade Advocates in the World. 
+So if you have a business dream and you want to do more than simply make money, keep these tips in mind. Know what you want, determine your values, use social media to publicize your business, try crowdfunding, and - above all - don't give up. As Ben Conard of Five North Chocolate says, "Every hurdle along the journey eventually becomes a lesson learned."
+
+Reading 3: MAKING A DIFFERENCE, ONE VEGETABLE AT A TIME
+In 2010, California resident Ron Finley was a man with a problem. Living in South Central Los Angeles - a poor area with little fresh food - Ron knew firsthand the difficulties residents had in preparing healthy meals. Fast-food restaurants were common in the neighborhood, but Ron often drove for 45 minutes to buy an apple or tomato. Because of the lack of healthy food, Ron called the area a "food desert," and he was inspired to come up with a plan to create a "food forest." Next to the streets outside his home were empty patches of dirt, ignored by everyone. His solution was to use this unused land to grow vegetables. He planted lettuce, tomatoes, peppers, and many other vegetables; he watered them and hoped they would grow. 
+Ron's roadside vegetables did grow, and so did his dream. He wanted to help his neighbors to grow their own fruits and vegetables, with the goals of encouraging healthy eating, revitalizing his community, and making the world more beautiful. Within a few years, Ron had established a foundation, The Ron Finley Project, which depends on donations, to facilitate the development of community gardens, and he had appeared in several TV documentaries. By 2020, he had helped dozens of neighborhoods like his own to create their own gardens. 
+Ron Finley is typical of many successful social entrepreneurs. For Ron, the key ingredients to success were a clear sense of the problem, the ability to come up with a creative, sustainable solution, and a willingness to keep going. However, his journey has not always been smooth. As someone with no training in gardening (he had previously worked in the fashion industry), he made a lot of mistakes. "A lot of what I've learned, I've learned on my own. It's taken longer, but the process is beautiful," he says. Ron has also encountered legal challenges. When he first planted vegetables outside his home, he found himself in trouble as gardening on public land was illegal. He won that battle with the authorities, and the law was changed. Ron continues to bring his expertise to beginner gardeners around the world. His most recent initiative is an online training course in gardening for beginners. He says of gardening: "This is not a hobby; this is a life skill. Everybody should be able to have a healthy, nutritious meal, and this is where it starts." 
+On the other side of the USA in Washington, D.C., Mike Curtin has much in common with Ron Finley. As the Chief Executive Officer of the USA's first community kitchen, DC Central Kitchen, Mike has also devoted his career to helping his community through food. The business was launched in 1989 by Mike's colleague, Robert Egger, whose experience as a volunteer made him realize that it was not enough to simply hand out meals to the hungry. Like Ron Finley's Los Angeles neighborhood, parts of Washington, D.C. are home to low-income people who experience social problems, such as crime and unemployment. Robert knew that the solution to these problems was more complex than simply providing a hot meal. 
+The result was DC Central Kitchen. The short-term goal of the non-profit organization was to give people in urban areas greater access to healthy food. In the long term, the organization hoped to prepare low-income people for satisfying careers in the restaurant industry. The organization, now run by Mike, employs 177 people. With his background in business management, Mike runs the organization like a business, paying attention to financial planning, marketing, human resources, and other aspects that make a successful business. 
+The results have been impressive. One DC Central Kitchen initiative was to provide additional refrigerators for local stores, along with recipe cards, so the store owners could stock more fresh fruit and vegetables and teach consumers how to prepare them. This is a great help for working parents, who are often too busy to find fresh produce, and who frequently depend on fast-food meals to feed their children. Another initiative provides healthy lunches for school children, using food produced in collaboration with local farmers. 
+Most notable, however, is DC Central Kitchen's skills training program. The organization offers training courses in cooking. While this is not unusual, what sets DC Central Kitchen apart from other training providers is that its students come from difficult backgrounds. Many have been homeless or in prison, and all have experienced poverty. Over a period of 14 weeks, the trainees learn cooking skills. After graduation, all go on to find good jobs in the food industry, some in places like the White House and the Smithsonian Museum. For many of the trainee cooks, who have little formal education and limited literacy skills, finishing the program is the first time they have completed a course of study. Mike recognizes that DC Central Kitchen "is not really about food. It's about changing the way people think." 
+Ron Finley and Mike Curtin are two social entrepreneurs who have made an enormous difference to their community through food-related initiatives. For both, the key has been to start small, focus on what is needed, and keep going. As Ron says, "Everything starts small. Everything you eat starts with a flower before it's a piece of fruit or a vegetable." Mike is equally realistic about what can be accomplished, saying, "We know we're not going to save the world, or everyone in it. But we know we can do better, and we focus on doing a little better every day." The early stages of a food-related social business might include an apple in a child's school lunch. However, a few years later, the results could be life changing.
+
+Unit Vocabulary (20 Words):
+collaboration, demographic, entrepreneur, ethical, facilitate, funding, indigenous, initiative, launch, literacy, lucrative, maximize, minority, naive, preservation, prosperity, pursue, revitalize, role model, sustainable`,
+
+        unit2: `Unit 2 Reading Texts
+
+Reading 1: COFFEE: MAKING THE MODERN WORLD POSSIBLE
+From Brazil to Russia, Algeria to Switzerland, people love coffee. As nightshift workers, long-distance truck drivers, or students with deadlines know, a cup of coffee can keep you awake and help you to get a job done. But is all this coffee good for you? Scientists have started to uncover the answer to this question - and you might be surprised by their findings. 
+Why do people say they need coffee? 
+Coffee contains a natural drug called caffeine, found in its leaves, seeds, and fruit. Caffeine is known to stimulate the brain and central nervous system, making people feel less tired. Caffeine was identified in 1820 by a German scientist, Friedlieb Ferdinand Runge. At this time, the Industrial Revolution was taking place in Europe, and factory workers, who worked long hours at repetitive jobs, were served coffee to prevent them from falling asleep at their machines. In this sense, caffeine has been called "the drug that made the modern world possible." 
+If caffeine was necessary in the 19th century, it is even more so today. Charles Czeisler, a researcher at Harvard University, says that for most of human existence, people's sleep cycles followed the sun; that is no longer the case. Czeisler explains, "The widespread use of caffeinated food and drink - in combination with the invention of electric light - allowed people to cope with a work schedule set by the clock, not by daylight or the natural sleep cycle." For those who have to be up when the sun is not, coffee is often a way to create and maintain a new sleep cycle. 
+How does caffeine work? 
+When caffeine enters the body, it reacts with a chemical called adenosine, which slows your nerve activity. It is adenosine that causes you to feel tired in the morning and after lunch. Caffeine blocks the effects of adenosine. It also increases the levels of adrenaline in the blood and the brain activity of the neurotransmitters dopamine and norepinephrine. The combination of these biological processes makes the coffee drinker feel more alert, often within 20 minutes of taking their first drink. 
+Does everyone react to coffee in the same way? 
+No. Researchers have found that differences in genetics affect the way in which individuals react to coffee. Someone whose genes cause them to process caffeine more slowly might exhibit high blood pressure, heartburn, upset stomach, or insomnia, while someone whose body uses up caffeine quickly will experience no negative side effects. 
+Is drinking coffee bad for you? 
+It can be, especially if you consume multiple cups and are at risk for other health issues. Numerous studies have pointed to the adverse effects of caffeine; it has been connected to heart disease, digestive problems, and certain cancers, as well as to reduced sleep. It is also very addictive, and people who give up coffee report having negative side effects. However, there is new evidence that coffee is not as dangerous as once thought. Two recent studies contradict earlier findings. A large-scale study of over 520,000 people in 10 European countries found that coffee consumption was associated with lower risks of death from heart disease, cancer, respiratory disease, stroke, and diabetes. Similarly, a study of 185,000 participants in the United States found a connection between coffee consumption and longevity: People who drank two to four cups of coffee per day had a risk of death 18 percent lower than non-coffee drinkers. It is estimated that coffee drinkers have a 65 percent lower risk of developing Alzheimer's disease, a 7 percent reduced risk of diabetes, and an 84 percent lower risk of liver disease. 
+There is also some evidence that drinking coffee offers some protection against depression and other mental health concerns. In a study carried out in the United States, 50,739 women were followed over a 10-year period. Their intake of coffee, other caffeinated beverages, and decaffeinated beverages was tracked through a variety of questionnaires. Researchers concluded that the risk of depression decreased as caffeine intake increased; they admit, however, that much more research is needed. 
+How can the health benefits of coffee be explained? 
+Even if some research shows coffee offers these health benefits, the reason is not yet clear. Marc Gunter is an expert in cancer prevention at Imperial College London and co-author of the previously mentioned European study. He believes that the positive effects of coffee are related to the coffee bean itself. Gunter suggests, "It's something about coffee rather than something about the way that coffee is prepared or the way it's drunk." The key ingredient may not even be caffeine. German researchers Hubert Kolb, Kerstin Kempf, and Stephan Martin point out that positive health effects are also found in drinkers of decaffeinated coffee, which has about 97 percent of its caffeine removed. They propose that coffee beans share many of the same benefits as fruit and vegetables, such as broccoli and berries, and may be viewed as a "healthy vegetable food." The researchers acknowledge, however, that there is still more research to be done. 
+Does this mean I can keep drinking coffee? 
+Perhaps. These recent findings give hope to those who rely on their daily cup of coffee (or three) to get through the day. However, Charles Czeisler says, "There is a heavy, heavy price that has been paid for all this extra wakefulness." Without the recommended eight hours of sleep every night, the human body suffers physically, mentally, and emotionally. Czeisler warns, "As a society, we are tremendously sleep deprived." People who sleep less than eight hours are more likely to catch colds, gain weight, or have accidents. They also have trouble focusing, make more mistakes, and are more likely to suffer from bad moods and depression. 
+The conclusion seems to be that as long as you are getting enough sleep and are generally healthy, you are probably fine to keep drinking a moderate amount of coffee if you enjoy it. Harvard professor Alberto Ascherio states, "I think that the solid conclusion is that if you're a coffee drinker, keep drinking your coffee and be happy." And if you don't enjoy coffee? Ascherio says, "I think you can go on drinking your tea or water without a problem." 
+
+Reading 2: TECHNOLOGY AND SLEEP: WHAT IS THE CONNECTION?
+If you cannot sleep at night, the problem might be the amount of coffee you have consumed during the day. The amount of screen time you enjoy before bed might also be to blame . . . 
+Do you find it hard to fall asleep at night? Your computer - or even your phone - may be to blame. When we use devices late at night, whether to work, chat, or play games, our internal clocks get confused: Is it daytime or night time? Should we be awake or asleep? Frequent users of technology are often advised to turn off their devices an hour or two before bed and to spend that time taking a calming bath or doing exercise. This, however, may not always be realistic for students with deadlines, or even for people who enjoy watching videos as a way to relax after a long day. How does the use of electronic devices affect the brain and keep us awake? And is there any way these devices could be used differently to help us sleep? 
+The human body, like that of other animals, insects, and even plants, has a natural 24-hour biological cycle, known as the circadian rhythm. In the past, when people's waking and sleeping hours followed the rising and setting of the sun, our circadian rhythms were aligned with nature. This is not the case today. We are constantly exposed to light from artificial sources, including electronic devices. This causes disturbances to our circadian rhythms, with possibly serious effects for our health. 
+The human circadian rhythm is controlled by a hormone called melatonin, produced in the pineal gland in the brain. When it gets dark, our bodies naturally produce melatonin, which makes us feel sleepy; for this reason, melatonin is sometimes called the "sleep hormone." In short, melatonin tells us when it's time for bed. In the daytime, less melatonin is produced; this tells us to stay awake. People who travel across several time zones and who are unable to sleep at night are sometimes advised to take melatonin pills to mitigate the effects of jet lag. 
+What does this have to do with your electronic devices? Devices such as computers and phones produce a blue light. This blue light suppresses the production of melatonin. If you find it hard to fall asleep after watching a late-night video on your laptop, it could be because your melatonin levels are low. Melatonin deficiency can lead to insomnia: You are unable to fall asleep, since your body has received messages to the contrary. This disruption to our circadian rhythm has been associated with a variety of ailments, including chronic digestive problems, lower energy levels, and depression. 
+However, recent research has suggested that the effects of blue light on the brain, and consequently, on our sleep quality, are not fully understood. A 2019 study at the University of Manchester, U.K., indicates that yellow light might actually interfere with sleep more than blue light. Researchers suggest that yellow light might trick the body into thinking it is daylight, whereas blue light might tell the body that it's evening. It is important to keep in mind that sleep research is often carried out with mice, which are nocturnal animals, and they may not react in the same way as humans. Clearly, biologists do not yet have all the answers. 
+Despite the lack of agreement about blue light, there are other important ways in which your devices might keep you awake. First, the use of devices delays the onset of REM sleep, the period of sleep in which you dream. This is problematic, as insufficient REM sleep is associated with anxiety, depression, and an inability to concentrate. Second, using devices keeps your brain active. When you've enjoyed a chat with a friend, a movie, or a game, it can be hard to relax; you want to keep thinking about what you've watched or talked about. Finally, if you keep your phone near your bed, you risk being woken up by various beeps and pings when you receive a text or email. 
+It seems clear, then, that the use of technology can be a serious impediment to a good night's sleep and that it is best avoided before bed. But is this absolutely necessary? Recent developments in technology have made it possible for devices to actually help give you a better night's sleep. Many devices now have a setting that allows the user to filter out blue light. Three other possibly beneficial effects of using devices at night are as follows: 
+- White noise. White noise is peaceful background noise, such as the sound of ocean waves or a light rainfall. If you live in a city and are kept awake by the noise of traffic or people shouting outside your window, a white noise app might be a good investment. 
+- Nighttime exercises. There are various apps that can help you to relax before sleep by leading you through a series of breathing or meditation exercises. Users of these apps report feeling less stressed and able to drift off into a peaceful sleep. 
+- Awareness-raising devices. You may know that fitness trackers can alert you when you have walked 10,000 steps each day. Newer versions of these devices can help you track not only how many hours of sleep you get each night, but also the quality of your sleep. Users can review their sleep data and then take actions to improve their sleep or keep doing what is working. 
+So, should you remove all of your devices from your bedroom if you want to get a good night's sleep? Not necessarily - but be aware of the biological effects of artificial light, and think carefully about how and why you are using these devices late at night. 
+
+Reading 3: THE POWER OF NAPPING
+1.	At the Huawei factory in Shenzhen, China, lunch is over, and the lights are turned down. The employees, who keep sleeping bags under their desks, are preparing for their daily nap. Daily naps are an accepted part of life, not only in China but throughout much of Asia, South America, and southern Europe, where two-hour breaks in the middle of the day are common. Now, the idea of having a nap at work has reached the United States, and companies like Google and Uber have established sleep facilities in their offices. While napping was once thought to be useful only for young children, recent research contradicts this belief. There is growing evidence that napping can also be good for the adult brain. As Jerome Siegel, director of the Center for Sleep Research at the University of California, Los Angeles, says, "Everybody agrees that if you are sleep deprived, you can't learn, perform, or think very well." 
+2.	Researchers have found that sleeping helps to prepare the brain to accept and learn new information. Matthew Walker of the University of California, Berkeley, suggests, "Sleep prepares the brain like a dry sponge, ready to soak up new information." Walker and his colleagues asked 39 young adults to perform a variety of tasks in which they had to learn new information. After carrying out the tasks, half of the participants took a 90-minute nap, and the other half stayed awake. They were then all asked to carry out a new set of learning tasks. Those who had napped demonstrated much better learning than those who had stayed awake. Walker concludes that the nappers' brains were ready to take in new information. As science writer Victoria Jaggard explains, "If your brain is an email account, sleep - and more specifically, naps - is how you clear out your inbox." The implications for employees and students are clear: If you want to learn quickly and easily, make sure you get enough sleep before you learn. 
+3.	Napping can not only help you to learn; it can also help you to remember information. Specifically, napping is beneficial for the hippocampus, the part of the brain associated with memory. In 2008, Sara Mednick carried out a study at the University of California, Riverside, in which participants were required to remember a series of words. She found that those who had slept before the test performed better than those who had consumed caffeine or those who hadn't slept or received caffeine. Mednick's results were supported by Axel Mecklinger at Saarland University, Germany. Mecklinger studied the ability of participants to remember individual words and pairs of unrelated words. Half of the participants had a nap; the other half watched a DVD. While both groups remembered the individual words equally well, the napping group performed better when tested on their ability to remember the word pairs. This suggests that if you have trouble remembering things that go together - for example, if you see someone's face and cannot remember their name - taking a nap might be helpful for you. 
+4.	As well as improving your cognitive function, napping can also help you to control negative emotions. In a 2015 study carried out at the University of Michigan, Jennifer Goldschmied wanted to find out how napping affected people's emotions. She divided 40 participants aged 18 to 50 into two groups. One group napped for 60 minutes; the other group watched a nature video. When tested afterwards, the napping group were more willing to carry out difficult or frustrating tasks than those who watched the video. Several studies have now uncovered the connection between sleep and the amygdala, the part of the brain associated with emotions: Sleep helps to regulate the activity of the amygdala, with the result that the sleeper feels less emotional on waking. Sleep scientist Elaina Bolinger of the University of Tuebingen, Germany, puts it in simple terms: "Sleep helps you feel better." If something is bothering you and preventing you from focusing on your job or your studies, the solution seems clear: Take a nap. 
+5.	However, while napping during the day is beneficial, it is important to do it in the correct way. Scientists acknowledge that there is much about sleep that is not fully understood, but they do know that your brain goes through a 90-minute cycle when you sleep. This cycle has several different phases: light sleep, deep sleep, and rapid eye movement (REM) sleep, when you experience dreams. Sara Mednick believes the best time to wake up after a nap is either after 20 minutes (while you are sleeping lightly), or after 90 minutes (at the end of an entire cycle). People who nap for 40 to 60 minutes are more likely to wake up in the middle of the sleep cycle when they are sleeping deeply; this leaves them feeling unsatisfied and miserable. If you have ever taken a short nap on a long flight, you have probably experienced this: you wake up feeling worse than if you had stayed awake. If you choose to nap, do it carefully. 
+6.	Back at Huawei in China, one employee describes the daily nap as "like taking a shower" - workers wake up feeling refreshed and ready to deal with the afternoon's challenges. Outside China, there is growing recognition that napping can be helpful. Kimberly Cote of Brock University, Canada, argues, "If you're talking about a healthy adult population, I think just about anyone could benefit from a nap." So, if you see a sleeping area in your workplace or school, don't feel guilty if you take a few minutes and drift off to sleep - your brain depends on it. 
+
+Unit Vocabulary (20 Words):
+acknowledge, adverse, ailment, aligned, chronic, consumption, contradict, deficiency, deprived, disturbance, exhibit, filter out, genetics, impediment, interfere with, mitigate, repetitive, stimulate, suppress, uncover`,
+
+        unit3: `Unit 3 Reading Texts
+
+Reading 1: A TEAM'S JOURNEY TO SUCCESS
+1.	In Battambang, Cambodia, Sieng Sokchan was training for the experience of her life. Sieng was the captain and coach of a basketball team for women with disabilities, and she had recently learned that she would be leading the Cambodian national team to their first international competition. She was going to the 2018 Asian Para Games in Jakarta, Indonesia, where she would join 3,000 athletes from 43 countries in a celebration of sports for competitors with disabilities. Of the 12 members of Sieng's team, 7 had been selected from her own team, the Battambang Roses. For Sieng, who acquired her disability as a child and had since made sports her passion, the trip to Indonesia was a dream come true. 
+2.	When Sieng was a child, street fights were quite common in her town. One day when she was 11, Sieng was helping at her grandmother's market stall. She felt a strange sensation in her back. She had been shot by a stray bullet. Although she was rushed to the hospital, Sieng did not have an x-ray until a week later, and by that time, it was too late. Her spine had been damaged, and she would never walk again. 
+3.	Looking back on the years following the accident, Sieng remembers, "Dark thoughts often lingered in my head. I felt angry, but there was no one to talk to." That all changed one day when she was introduced to wheelchair basketball by the International Committee of the Red Cross (ICRC). She immediately fell in love with the game, and when she scored her first basket, she felt a sense of achievement she had never experienced before. Sieng was then asked to form a basketball team for women with disabilities. She was skeptical at first, but she accepted the challenge, and her team, the Battambang Roses, was born. Now, after years of training and winning local competitions, Sieng and her team members were going to Indonesia to compete internationally. As captain, Sieng would have a critical role to play in leading her team. 
+4.	Psychologists look for insights into how groups of individuals come together to accomplish a goal, and what makes a team successful. One of the best-known models for teamwork was proposed by Bruce Tuckman, who names five stages which teams - athletic, professional, or recreational - usually pass through on their way to success. Tuckman's five stages can be seen in Sieng's journey to the Asian Para Games. 
+5.	Forming: This is when the team comes together. Members are chosen for both their competence and their personal characteristics. At this stage, there is a sense of excitement about being on the team, but also anxiety about the outcome. Sieng remembers, "It was hard to look for women to play this sport. First, they didn't know how to operate the wheelchairs or how to dribble the ball and shoot the ball, so they were reluctant to take part in the beginning." The women she approached had not only never played basketball before, they were also dealing with poverty and a lack of medical resources. Sieng achieved success in this stage by promising friendship, emotional support, and increased fitness to the women she persuaded to join. 
+6.	Storming: This is the most stressful step in the team's progress. Problems within the team might emerge as team members get used to working together. Sieng admits that sometimes there were fights or jealousy as the players worked to establish their own roles within the team. However, as a woman with a disability, she told her team, "Our society is already discriminating against us. We must be kind to each other. If we don't love and support each other first, no one will." By showing understanding and compassion toward each individual player, Sieng brought her team together.
+7.	Norming: By now, team members are working well together, overcoming challenges, and making progress. The Battambang Roses took part in a comprehensive training program, so they could raise the level of their game and compete against others. Sieng remembers, "Training women to this level of the game hasn't been easy. We all have different struggles and had to work harder than everyone to overcome them." But every time they saw the ball go through the hoop, the women realized how strong their bodies were. This kept them motivated. As the team made progress, they started to play at the national and international levels, winning games against teams from India, South Korea, and Laos. 
+8.	Performing: Preparation has paid off, and the team is now working well together with minimal friction. The team's objectives are within sight. As it turned out, the Cambodian team did not win a medal at the Asian Para Games in Jakarta. In fact, playing against elite teams such as China and Thailand, they lost all their games and finished in last place. But their performance was not a failure. Playing in their first major international competition, they won something more important: recognition, for their own achievements and for all women with disabilities in the sports community. Sieng says, "I still think we are winners." 
+9.	Mourning: Tuckman added this fifth step at a later stage in his research. At this stage, the team's work is done, and the team members may go their separate ways. This is often a time of mixed feelings. If the team's objectives have been met, this may be a time of celebration. If the team has not succeeded, there may be feelings of regret and frustration. Even if the team has worked well, there may still be feelings of sadness if the team members have formed a close connection and may not work together again. Fortunately for Sieng, her journey with her team was not over. She would continue to play a game she loved, with a group of women she now called sisters. 
+10.	Looking back on her journey to Indonesia, Sieng has no regrets. For these women, team membership has led to a transformation in their lives, bringing achievement, confidence, and belief in themselves. Perhaps most importantly, it brought a sense of unity. As Sieng says, "The important thing is for the team to trust and believe in each other. We love each other because we are on the same team." 
+
+Reading 2: WORKING TOGETHER FOR SUCCESS
+While financial support and strong organization are important factors in teamwork, the psychological aspects of team membership also play a role in determining success. 
+1.	According to an African proverb, "If you want to go fast, go alone. If you want to go far, go together." The ability to work together to accomplish a goal makes the difference between success and failure. It could even be the difference between life and death. What makes teamwork effective? Here are some fundamental principles of teamwork as experienced by four unique teams. 
+Have a clear and realistic goal 
+2.	As a teenager, National Geographic Explorer Andrew Brennen understood the importance of education but was concerned about the way in which decisions about education were made. Andrew wanted students to have input into educational policy. He met several other students who shared his concerns. Andrew explains: "Our overall idea was that we students were spending 35 hours a week in the classroom, but when changes are made to the classroom, no one was asking us what worked and what didn't." The result was the Prichard Committee Student Voice Team, which quickly grew into a team of 100 students. 
+3.	The team had a clear goal: to ensure students had a voice with regard to education. Andrew and his team have implemented several strategies to meet this goal. They work together to carry out surveys, deliver workshops, give presentations, and organize events. They do much of this with the help of social media. 
+4.	Having specific goals helped the team achieve them. One initiative was for the inclusion of students in selecting the school superintendents. Another called for increased funding for textbooks. Andrew also led a public affairs campaign that resulted in $14 million in financial aid for students from low-income backgrounds. These initiatives were all successful because they used resources and followed plans Andrew had clearly defined from the beginning. 
+Develop self-respect and confidence in your team 
+5.	In Zimbabwe, the Akashinga (a word meaning "brave ones" in the local Shona language) patrol the grasslands of the Phundundu Wildlife Area to combat poaching, which is the illegal killing and exporting of wildlife. 
+6.	The Akashinga are a conservation team with a difference: They are all women. Their founder, Damien Mander, wanted team members who were determined to make a difference; he built his team with women from difficult backgrounds. Mander put the women through a rigorous training program, which included team-building activities such as packing a 200-pound (90 kilogram) tent, dragging it up a mountain with their legs tied together, and then reassembling it. The women gained respect not only from their teammates but also from their leader. To Mander's surprise, only three of the women dropped out. 
+7.	But perhaps most important is the self-respect these women have found. Many joined the team with little education and limited skills, but now their membership provides them with income to take care of their families and save for college. They are empowered to keep working toward their personal and professional goals. Member Kelly Lyee Chigumbura says, "When I manage to stop poachers, I feel accomplished . . . I want to spend my whole life here on this job, arresting poachers and protecting animals." 
+Focus on the goal, not on your own achievements 
+8.	In 2018, 12 boys aged 11 to 17 and their soccer coach became lost in one of the deepest caves in Thailand. With the rainy season and floods approaching, the situation was desperate. A team from around the world was quickly assembled: a firefighter, a computer consultant, a retired veterinarian, and Richard Harris, a doctor and National Geographic Explorer. They had little in common apart from one thing: They were the best cave divers in the world. Their task was to find the boys and bring them to safety. 
+9.	As the world watched, the divers worked in the flooded cave. On the 10th day, the boys were found - alive, but half a mile deep in the cave. The only way to get them out was for the divers to swim out underwater, each bringing a boy with him. As Richard Harris says, "I didn't think it would work at all . . . I put their odds of survival at zero." Miraculously, after a difficult rescue operation, all the boys and their coach were safely out of the cave. 
+10.	Afterward, many of the divers were awarded medals. All, however, denied that they were heroes; instead, they praised the boys and the 7,000 volunteers who had been part of the operation - cooking meals, operating water pumps, or doing laundry. It was a true team effort, made possible by having one goal in mind: not heroism, not medals, but the rescue of 12 young boys. 
+Develop and show trust 
+11.	National Geographic Explorer Hilaree O'Neill and her team of five elite mountaineers had a goal: to climb Hkakabo Razi, the highest peak in Myanmar. The journey to the summit was full of risks. To reach the mountain, the group hiked through dense jungles, crossed rivers on rope bridges, and dealt with poisonous snakes. Once on the mountain, the dangers changed to frostbite, shortages of food, and the risk of falls. 
+12.	On the mountain, there is no alternative but to trust your team members' skills. As team member Mark Jenkins explains, "We're all roped together, so it's crucial that none of us fall. . . . You must trust your life to their judgment and ability, and they entrust their lives to yours." If someone does fall off a ridge while attached to a rope, the only way to save that person is for the climber behind to jump off the opposite side of the ridge to balance the fall. As Mark says, "This is the depth of trust required in mountain climbing." 
+13.	It is also important to trust the members of the team to communicate honestly. On the day the climbers were to attempt to reach the summit, one of the climbers spoke the words they had all been thinking: "I'm scared . . . I think we should turn around." The climbers headed back down the mountain. This decision would not have been possible without trust and respect among team members. 
+14.	An awareness of principles like these can increase team success. Andrew Brennen's team has empowered students. The work of the Akashinga has reduced elephant poaching by 80 percent in the Phundundu region of Zimbabwe. The Thai boys and their coach all emerged from the cave alive. And while the Myanmar climbers did not conquer Hkakabo Razi, their teamwork helped them to avoid a potentially fatal situation. 
+
+Reading 3: WORKING IN A REMOTE TEAM
+1.	If you work for an international company, you might work from Shanghai or Dubai while your boss is based in New York and your coworkers are in London, Sydney, and Singapore. Though you are all in different locations and time zones, you have been brought together to work on a project and you need to find a way to collaborate effectively. This situation is not unusual: Today, 55 percent of all global businesses allow employees to do at least some work remotely, and 99 percent of remote workers would like to continue doing so. Remote team members report increased productivity, less time and money wasted on trains and buses, and a favorable work-life balance. However, being part of a remote team is not always easy. You may have never met your team members in person; you may experience uncertainty about what is expected of you; you may feel isolated; and you may encounter distractions from your work. Fortunately, there are some strategies you can use to help you succeed in a remote teamwork environment. 
+2.	The most important aspect of remote teamwork is self-discipline. When you don't need to be in the office every morning, you need to motivate yourself to work; there is no boss telling you when to come in and when you can leave. It can be a good idea to start and finish work at the same time every day. Decide when you will eat lunch, and ideally, eat it in a different room from your workspace. You may want to set a time when you will be away from your computer (for example, after a certain time in the evening), and inform your team that you will not be available after that time. 
+3.	If you have never met your team members in person, you may want to schedule an online video meeting to help you to establish team unity. This will allow you to put a face to a name, and it will give you some insight into what everyone is like: who likes to be a leader, who may be reluctant to contribute, and who may not be a team player. Keep this initial meeting informal; the more complex discussions will come later. 
+4.	Do you know exactly what you are expected to achieve, what your priorities should be, and when your deadlines are? Your goals should be aligned with those of your team members. Ideally, individual team members should feel empowered to provide input into the best way to organize a project, but you should try to make key decisions early in the process. In all cases, make sure you have everything you need to do your work. Try not to find yourself in a situation where you need an important document, and the only person who has this document is on the other side of the world, asleep in bed. Knowing how you are going to share documents (for example, through cloud storage or an internal file-sharing tool) is crucial if your team is going to function well together. 
+5.	When you begin collaborating with a remote team, it's advisable to establish how often you are going to keep in touch with your team members and what form of communication is preferred. Do you want to rely on email, or do you prefer instant messaging services? Will you have regular video meetings? Even when the project is going well, meeting online can be helpful to establish relationships. Remember that if you have team members in other parts of the world, their communication styles may be different from yours; they may be more or less formal than you are. If you have team members in different time zones, you may find yourself in a position where a decision needs to be made, and not everyone is at their desks. It might be a good idea to determine in advance how much decision-making authority each team member has. 
+6.	In an office environment, when there is something you don't understand, you can often deal with it by simply asking someone sitting nearby. Similarly, if you experience any friction with a team member, the in-person solution may be as easy as inviting the other person for a coffee and a chat. In both cases, it may take more effort to deal with issues when you are working remotely. Instead of getting into a long chain of emails, which can easily be misunderstood, a quick phone call or video chat might be a better way to solve a problem. Above all, try to solve problems as soon as they arise. 
+7.	Do you know enough about your team members' personal and local situations? It's important to be flexible. Be sensitive to the fact that your team members may be experiencing a tropical storm, an important national holiday, or even a distracting sports event in their city. Be aware, too, that your remote colleagues might experience personal situations they cannot control, such as the presence of young children in their home. In the same way, you may feel isolated and bored working at a distance, and you may lack motivation to get your work done. It's important to recognize that these feelings are all normal. When you're going through a difficult time, take a break. Go for a walk or spend time on a hobby to clear your mind. 
+8.	Because you're not physically with your team, it's even more important to celebrate the successful completion of a project together. This can help improve team dynamics for better collaboration, prevent isolation problems, and increase overall job satisfaction. You could have an online pizza party, or just meet for a final chat, where you talk about things unrelated to work. You've accomplished your goal, so enjoy it! 
+
+Unit Vocabulary (20 Words):
+aid, campaign, combat, competence, comprehensive, conservation, desperate, discriminate, elite, empower, friction, fundamental, inclusion, input, insight, judgment, outcome, reluctant, skeptical, unity`,
+
+        unit4: `Unit 4 Reading Texts
+
+Reading 1: REACH FOR THE SKY
+How are extremely tall buildings made? Are they safe? Read the article to find out. 
+1.	Dubai's Burj Khalifa, Shanghai's Shanghai Tower, Kuala Lumpur's Petronas Towers, and New York City's Empire State Building are world famous for their extreme height and innovative designs. They have become popular tourist attractions, but they also provide much-needed residential and office space. How were these giant structures built? Are they safe? And how much higher can engineers reach? 
+Building a Skyscraper: How It's Done 
+2.	While extremely high buildings vary in their design and architectural appeal, they all follow a similar construction process. First, a deep foundation is put in place. When you look at a skyscraper, you only see the part above the ground; what you do not see is the building's underground support, made up of reinforced concrete pillars. These pillars can extend up to 60 meters underground to reach the rock below. Next, vertical beams are installed, using a crane. Horizontal beams are then put in place to hold the building together and to distribute weight to the vertical columns. Sometimes, diagonal beams are used for extra strength. Finally, the outside walls are installed. These do not support any weight and are often covered with windows. 
+Ensuring Safety for Occupants 
+3.	When engineering a project of such large scale, ensuring safety is essential. Many of the world's most famous skyscrapers play multiple roles: offices, apartment buildings, and hotels. Many have observation decks at the top. At 632 meters, the Shanghai Tower can accommodate 16,000 people every day. Engineers take many precautions to keep all these people safe. 
+4.	First, skyscrapers need to be stable, with lower levels supporting upper levels. This requires a combination of a firm foundation and modern building materials. This is especially important for buildings such as Dubai's Burj Khalifa, which is 828 meters high and was built on weak sandstone. Engineers used a foundation of steel and concrete with 192 pillars buried over 50 meters deep underground to ensure stability. During construction, one danger was that the concrete would crack in the extreme desert heat. Since cooler concrete is less likely to crack when drying, the concrete was mixed at night when temperatures were lower. Steps like these ensure skyscrapers stand for hundreds of years. 
+5.	Skyscrapers also need to be safe in the event of a disaster, such as a fire. In 1968, a gas explosion in an 18th-floor apartment in London destroyed an entire corner of the building, killing four people. Today, developments in engineering have led to stricter building regulations and new fire-resistant materials. It is also important that any fire does not spread; this is achieved through the use of fire doors and sprinkler systems. 
+6.	Several of the world's tallest skyscrapers, particularly those in the Pacific Rim, are built in areas of heightened seismic activity. Engineers have two ways to prevent buildings from collapsing during earthquakes. The first is by adding blocks of rubber to the foundation of the building. These absorb energy and reduce movement. The second is by using heavy weights at the top of the building. 
+When the building is pulled in one direction by the movement of the ground, the weight brings it back to the correct position and prevents it from falling. 
+7.	Another consideration is minimizing swaying of the building in the wind. Anyone standing on top of a skyscraper may be surprised to learn that the building moves in a strong wind. While this is normal and not dangerous, it is not a comfortable experience for people inside the building. Various methods are used to minimize movement and maintain comfort for the occupants. Buildings that are tapered at the top, such as the Burj Khalifa and Seoul's Lotte World Tower, are protected from the effects of strong winds, as are buildings with holes incorporated into the design, such as the Shanghai World Financial Center. These designs dramatically reduce the speed and force of the wind and help to reduce movement. 
+Ensuring Safety for Workers 
+8.	In the 1930s, even basic safety equipment items, like hard hats, safety glasses, and safety nets, were not mandatory. Today, safety standards are much stricter. Workers have protective clothing and equipment, and they are educated on the precautions they should take when working at extreme heights. Today, deaths on construction sites are far less common than in the past. 
+What's Next? 
+9.	Now that engineers have mastered the challenges of building safely into the sky, how far can they go? Right now, Saudi Arabia's Jeddah Tower is set to become the world's tallest building. While the official height is still a secret, it is expected to be over 1 kilometer tall. No one knows how long the Jeddah Tower will remain the world's tallest building, but with frequent improvements in building materials and engineering techniques, engineers really can reach for the sky.
+
+Reading 2: ENGINEERING MIRACLE UNDER THE SEA
+Building high above the ground is an engineering challenge, but what about building deep below the sea? Tunnels are equally challenging to design and construct - especially when they run underwater. 
+1.	For anyone standing on the cliffs of southern England or northern France, it would be hard to believe what lies below. Beneath the fishing boats, seagulls, and gentle waves lies one of the greatest engineering achievements the world has ever seen: the Channel Tunnel. The American Society of Civil Engineers has named the Channel Tunnel one of the Seven Wonders of the Modern World - and with good reason. A 50-kilometer tunnel connecting England and France, the Channel Tunnel is the longest underwater tunnel in the world. 
+2.	Since the Ice Age, the British Isles have been separated from their European neighbors, and engineers over the years have been inspired to find ways to connect the two land masses. The idea for a tunnel under the sea first came up as early as 1802, proposed by French engineer Albert Mathieu, but at that time, the technology to build one did not exist. It was not until the 1980s, prompted by increased commerce between the two countries, that an agreement was reached. 
+3.	Building a long tunnel always presents challenges - but as civil engineer Lucy Rew says, "Engineers love a challenge." Before construction could begin, some important decisions were made. It was decided that two parallel railway tunnels 7.6 meters in diameter would be built, together with a smaller service tunnel. This service tunnel would be used to build the main tunnels and would later be used for maintenance. The three tunnels would be built in the chalk layer below the sea bed; at their deepest point, these tunnels are 75 meters deep. The three tunnels would be built from both the English and the French side, and they would meet in the middle at the end of construction. 
+4.	The next step was to determine the machinery to be used. Teams needed to cut through the rock below the sea bed. Eleven tunnel boring machines (TBMs) were developed at a cost of several million dollars each. Each one was up to 243 meters long and had a head 15 meters in diameter, which cut through the rock. The edges of the head were made of tungsten carbide, one of the hardest materials in the world. Incorporated into each TBM was a conveyor belt. This carried away the rock that was dug out by the TBM. The rock was then placed on trains in the service tunnel and delivered to sites on land, where it was disposed of safely. This process allowed engineers to clear, on average, 149 meters of rock every week. Safety concerns were addressed from the outset. The pressure from the sea above meant that there was a risk of water flowing into the tunnel which would have been catastrophic. To counter this danger, the TBMs were waterproof, so anyone working inside the TBM would be protected. 
+5.	Construction began in 1988, with work starting on both sides. The first tunnel to be built was the service tunnel. Eleven TBMs were then assembled below the ground; this process took several months. Complications arose when fault lines were found in the chalk on the French side, which allowed water to leak into the tunnel and which interfered with construction. Emergency waterproofing measures were taken. When the tunnel was complete, its walls were lined with slabs made of concrete and steel rods. These slabs form a protective barrier between the sea and the people in the tunnel. The final stage was laying the tracks for both passenger and cargo trains. 
+6.	Since construction started at both ends, the English and French teams had to be careful to stay on course, as they needed to meet in the middle. Would the two tunnels meet? This was the big question, and it was answered in October 1990. The British and French tunnels were almost perfectly aligned, with only a 50-centimeter difference that caused no problems. On December 1, 1990, Philippe Cozette from France and Graham Fagg from England shook hands underneath the English Channel with the world's media watching. Cozette called the event "a fabulous moment," while Fagg said it was "history made." Cozette and Fagg remained friends for many years afterward. 
+7.	However, the construction of the Channel Tunnel also had its dark moments. Over 13,000 workers were involved in the project: engineers, geologists, construction experts, technicians, laborers, and many more. Twelve of them lost their lives; the first was 19-year-old Andrew McKenna, who was hit by a train carrying rock. As a Construction News report stated at the time, "The loss of those lives must always be in the minds of people involved in the project, particularly when celebrating the project's successes." 
+8.	Finally, nearly 200 years after Albert Mathieu's vision, the Channel Tunnel was opened on May 6, 1994. Today, 20 million business travelers and tourists use the tunnel every year, traveling from London to Paris in less than two and a half hours, which includes 35 minutes under the channel. In addition, state-of-the-art cargo trains carry 1.6 million trucks through the tunnel every year, avoiding the need for slower and weather-dependent transportation by ship. 
+9.	The Channel Tunnel has passed its 25th anniversary, and the question of what comes next remains. While the Channel Tunnel remains the world's longest underwater tunnel, it is not the world's longest tunnel, or even its deepest. The Channel Tunnel has been surpassed in length and depth by the Gotthard Base Tunnel in Switzerland, which opened in 2016 and passes under the Swiss Alps for 57 kilometers. With increasing concerns about the environmental effects of air travel, underground railways, which emit up to 90 percent fewer greenhouse gases, might be the way of the future.
+
+Reading 3: BUILDING AN ISLAND IN THE SEA
+1.	By the end of the 20th century, Dubai had become one of the wealthiest places in the Arab world. This old trading center had been transformed as a result of the oil industry; however, oil is a limited resource, and Dubai had started to develop its economy in other ways. One obvious growth area was tourism, and the Crown Prince of Dubai, Sheikh Mohammed bin Rashid Al Maktoum, was eager to establish Dubai as a luxury tourist destination. The problem was, the coastline of Dubai is only 72 kilometers long, so there was limited space for the construction of hotels. The Crown Prince had the answer: He would build an island in the Arabian Gulf. The result was Palm Jumeirah, a man-made island so large that it can be seen from space. This $12 billion project was an incredible achievement in engineering and a gateway to future possibilities in construction. 
+2.	The first step in the Palm Jumeirah project was to develop a concept for the design. The initial proposal was to construct an island in the shape of a circle, which would increase the length of the coastline by seven kilometers. The Crown Prince was not satisfied, however, and wanted more. He came up with the idea of a palm tree shaped design with a main section in the middle and sixteen leaves branching out. The island would be connected to Dubai with a bridge and a tunnel, and the innovative design would increase Dubai's coastline by 56 kilometers. The idea of taking land back from the sea was not new. In planning Palm Jumeirah, Dubai turned to civil engineers from the Netherlands, a country where the land area has been increased by 35 percent by building on land that was once underwater. A team of expert engineers from the Netherlands was brought to the Arabian Gulf, and construction on Palm Jumeirah started in 2001. 
+3.	One of the main concerns in constructing Palm Jumeirah was making sure the island was protected from nature. Palm Jumeirah is constructed using only natural materials, specifically, sand and rock; both of these risk being worn away by the sea. Project manager Robert Berger said at the time, "Every day, we're trying to prevent the destruction of what we built." The solution was to build an 11-kilometer outer wall in the shape of a circle around the island. It would not only protect the inner island from the sea, but it would also be wide enough to support additional roads, houses, and hotels on top. To accomplish this, first, engineers calculated the strength of the storms in the Arabian Gulf, the height of the waves, and any potential effects of climate change. Then, the height of the sea bed was raised by building up the sand and pouring stones on top of it. The top layer of the outer wall is made of huge rocks, which were transported from sixteen locations across the United Arab Emirates. After the rocks were put in place, divers were sent to the bottom of the sea to ensure that every section of the wall was stable and safe. Any break in a rock could cause the entire structure to collapse, with potentially catastrophic results. 
+4.	The next step was to start construction of the inner island, the palm tree-shaped area. Even though Dubai has a vast supply of sand, there was a problem: The sand from the desert was too fine and risked being washed away. More than 94 million cubic meters of suitable sand was taken from the sea bed in the Arabian Gulf and was transported to the project. As the island began to take shape, engineers needed to be sure that they were building in the right place. To confirm that they were creating the palm shape accurately, engineers used photos taken by satellites from space. In addition, they walked around the island every day, using state-of-the-art technology to record the position of every curve and bend. Late in the construction project, a serious complication was discovered. The outer wall prevented the sea from moving freely around the leaves of the palm tree. To address this problem, engineers decided to incorporate two bridges into the outer wall, creating spaces where free-flowing water could enter. 
+5.	The final step was ensuring the island was safe to build on. Building on a foundation of soft sand was difficult, and there was also a risk of earthquakes in the region. Special machinery was used to press the sand down to make it solid and to minimize the risk of earthquake damage. In 2004, construction of the island's infrastructure was begun, with the building of roads and a railway, and the installation of water, gas, and electricity supplies. The goal was to build a city of 120,000 people, with luxury hotels on the main part of the tree and along the outer wall, and private homes on the leaves. Also included in the plan were shopping centers, water parks, restaurants, movie theaters, and other services. To make the island look more natural, over 12,000 trees were planted. Within two years, an entire city had been built, using building materials from around the world. When the private houses on the island became available, all of them were sold within three days. 
+6.	Today, maintaining Palm Jumeirah is an ongoing process. The structure is constantly in danger of damage from the sea, and as the beaches on the island are man-made, they always need new sand. The effect of the island on the region's sea life is continuously checked, and the sea wall has become a popular diving location. This innovative project has confirmed Dubai's position as a world leader in engineering. As project manager Robert Berger said, "This may be the only place in the world where something like this could be done - to have the vision and then the courage to carry it through."
+
+Unit Vocabulary (20 Words):
+address, assemble, catastrophic, civil engineer, complication, diagonal, dispose of, distribute, ensure, foundation, horizontal, incorporate, innovative, machinery, precaution, reinforce, stable, state-of-the-art, surpass, vertical`
+    };
+
+    function copyUnitPrompt() {
+        const selectedUnit = document.getElementById('unit-selector').value;
+
+        if (!selectedUnit) {
+            alert('Please select your unit from the dropdown menu first.');
+            return;
+        }
+
+        const charText = document.getElementById('part-character').innerText.trim();
+        const reqText = `**Request:** \nSummarise the readings below into a clear, cohesive mid-term review.`;
+        const adjText = document.getElementById('part-adjustments').innerText.trim();
+        const outText = document.getElementById('part-output').innerText.trim();
+        const extText = document.getElementById('part-extras').innerText.trim();
+        const unitContent = UNIT_TEXTS[selectedUnit].trim();
+
+        const fullPrompt = [
+            charText,
+            reqText,
+            adjText,
+            outText,
+            extText,
+            `--- UNIT READINGS & VOCABULARY ---\n${unitContent}`
+        ].join('\n\n');
+
+        navigator.clipboard.writeText(fullPrompt).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => { status.style.display = 'none'; }, 3000);
+        }).catch(() => {
+            alert('Failed to copy. Please try again.');
+        });
+    }
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
+    }
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
+</script>
+
+</body>
+</html>

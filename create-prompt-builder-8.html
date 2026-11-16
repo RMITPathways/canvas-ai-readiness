@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 3: Unit Review Pack Prompt</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        color: #000000;
+    }
+    .widget-box {
+        border: none;
+        background-color: transparent;
+        padding: 0;
+    }
+    /* Column Headers */
+    .header-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        margin-bottom: 10px;
+        align-items: end;
+    }
+    .col-title {
+        font-weight: bold;
+        color: #000054;
+        font-size: 15px;
+        margin: 0;
+    }
+    /* Side-by-Side Aligned Rows */
+    .aligned-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 25px;
+        align-items: stretch;
+        margin-bottom: 8px;
+    }
+    .prompt-cell {
+        background-color: #F9F9F9;
+        border-left: 4px solid #000054;
+        padding: 10px 15px;
+        font-family: monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        color: #000000;
+    }
+    .tip-cell {
+        background-color: #e6f2ff;
+        border: 1px solid #cce0ff;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: #333333;
+    }
+    .tip-cell strong {
+        color: #000054;
+    }
+    .footer-bar {
+        margin-top: 15px;
+    }
+    .btn-copy {
+        padding: 10px 20px;
+        background-color: #E61E2A;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: inherit;
+        transition: background-color 0.2s;
+    }
+    .btn-copy:hover {
+        background-color: #000054;
+    }
+    .status-msg {
+        margin-left: 12px;
+        color: #E61E2A;
+        font-weight: bold;
+        font-size: 14px;
+        display: none;
+    }
+    /* Responsive stack for narrow screens */
+    @media (max-width: 700px) {
+        .header-grid, .aligned-row {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="widget-box">
+    <!-- Column Headers -->
+    <div class="header-grid">
+        <div class="col-title">Follow-Up Prompt Template:</div>
+        <div class="col-title">Why is the prompt written this way?</div>
+    </div>
+
+    <!-- ROW 1: Character -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Character:** 
+Act as a university English-language tutor creating a study guide for my classmates.</div>
+        <div class="tip-cell">
+            <strong>Character:</strong> Shifts the AI's role from summarising to designing peer revision materials.
+        </div>
+    </div>
+
+    <!-- ROW 2: Request -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Request:** 
+Using only the unit texts provided earlier in our chat and our summary above, create a "Unit Review Pack" for our class.</div>
+        <div class="tip-cell">
+            <strong>Request:</strong> Keeps the AI locked onto the exact readings and verified summary already in your chat history.
+        </div>
+    </div>
+
+    <!-- ROW 3: Adjustments -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Adjustments:** 
+- Base everything strictly on the unit texts above. Check which reading each person or example comes from so you never mix them up.
+- Cover all readings equally across the quiz, focusing on main arguments and how the texts connect.
+- Use clear English (CEFR B2 level).
+- Do NOT show the quiz answers yet—wait for my group to reply with our answers first.</div>
+        <div class="tip-cell">
+            <strong>Adjustments:</strong> Prevents the AI from mixing up details between readings, ensures every text is tested equally, and hides the answer key so your group tests and verifies the quiz first.
+        </div>
+    </div>
+
+    <!-- ROW 4: Type of Output -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Type of Output:** 
+Organise the pack into three clear sections:
+1. **Key Vocabulary (5 Words):** Use the bolded words from our summary above, with a simple definition and one unit-related example sentence for each.
+2. **Discussion Questions (2 Questions):** 2 open-ended questions to debate the unit's main themes.
+3. **Self-Check Quiz (3 Questions):** 3 multiple-choice questions (A, B, C, D).</div>
+        <div class="tip-cell">
+            <strong>Type of Output:</strong> Formats the revision pack into three consistent sections so every group produces a clean, structured resource for the class.
+        </div>
+    </div>
+
+    <!-- ROW 5: Extras -->
+    <div class="aligned-row">
+        <div class="prompt-cell prompt-part">**Extras:** 
+End by asking my group to reply with our quiz answers (e.g., "1-B, 2-A, 3-C") so we can check your answer key before sharing the pack with our class.</div>
+        <div class="tip-cell">
+            <strong>Extras:</strong> Builds in a quality-control checkpoint-you unlock the answer key by taking the quiz together, allowing you to catch any errors before sharing with classmates.
+        </div>
+    </div>
+
+    <!-- Copy Button -->
+    <div class="footer-bar">
+        <button class="btn-copy" onclick="copyReviewPackPrompt()">Copy Prompt</button>
+        <span id="copy-status" class="status-msg">Copied to clipboard!</span>
+    </div>
+</div>
+
+<script>
+    function copyReviewPackPrompt() {
+        const parts = Array.from(document.querySelectorAll('.prompt-part')).map(el => el.innerText.trim());
+        const fullPrompt = parts.join('\n\n');
+
+        navigator.clipboard.writeText(fullPrompt).then(() => {
+            const status = document.getElementById('copy-status');
+            status.style.display = 'inline';
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }).catch(() => {
+            alert('Failed to copy. Please try again.');
+        });
+    }
+
+    // Automatically resize the parent Canvas iframe to fit all content
+    function sendFrameHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage(JSON.stringify({ subject: 'lti.frameResize', height: height }), '*');
+        window.parent.postMessage({ subject: 'lti.frameResize', height: height }, '*');
+    }
+    window.addEventListener('load', sendFrameHeight);
+    window.addEventListener('resize', sendFrameHeight);
+    new ResizeObserver(sendFrameHeight).observe(document.body);
+</script>
+
+</body>
+</html>
